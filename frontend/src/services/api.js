@@ -1,8 +1,12 @@
 import axios from 'axios'
 
-const BASE_URL = import.meta.env.VITE_API_URL
-  ? `${import.meta.env.VITE_API_URL}/api`
-  : '/api'
+// VITE_API_URL is baked in at build time.
+// Fallback: the known Render backend URL so the app works even without the env var.
+const BACKEND_URL =
+  import.meta.env.VITE_API_URL ||
+  'https://analyticsforge-backend.onrender.com'
+
+const BASE_URL = `${BACKEND_URL}/api`
 
 const api = axios.create({
   baseURL: BASE_URL,
