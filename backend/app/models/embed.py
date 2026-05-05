@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, DateTime, ForeignKey, JSON, Boolean, Enum, Integer
+from sqlalchemy import Column, String, DateTime, ForeignKey, JSON, Boolean, Integer
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql import func
 import uuid, enum, secrets
@@ -17,7 +17,7 @@ class EmbedToken(Base):
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     token = Column(String, unique=True, nullable=False, default=lambda: secrets.token_urlsafe(32))
     name = Column(String, nullable=False)
-    resource_type = Column(Enum(EmbedResourceType), nullable=False)
+    resource_type = Column(String, nullable=False)
     resource_id = Column(UUID(as_uuid=True), nullable=False)
     owner_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
     allowed_domains = Column(JSON, nullable=True)       # list of allowed embed domains

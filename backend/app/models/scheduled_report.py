@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, DateTime, ForeignKey, JSON, Boolean, Enum, Text, Integer
+from sqlalchemy import Column, String, DateTime, ForeignKey, JSON, Boolean, Text, Integer
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql import func
 import uuid, enum
@@ -35,7 +35,7 @@ class ReportExecution(Base):
     __tablename__ = "report_executions"
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     scheduled_report_id = Column(UUID(as_uuid=True), ForeignKey("scheduled_reports.id", ondelete="CASCADE"))
-    status = Column(Enum(ReportStatus), default=ReportStatus.pending)
+    status = Column(String, default=ReportStatus.pending)
     error_message = Column(Text, nullable=True)
     recipients_sent = Column(JSON, nullable=True)
     executed_at = Column(DateTime(timezone=True), server_default=func.now())

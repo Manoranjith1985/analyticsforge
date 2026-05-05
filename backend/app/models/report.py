@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, DateTime, JSON, Boolean, ForeignKey, Enum
+from sqlalchemy import Column, String, DateTime, JSON, Boolean, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql import func
 import uuid
@@ -22,7 +22,7 @@ class Report(Base):
     query = Column(String, nullable=True)
     columns_config = Column(JSON, nullable=True)
     filters = Column(JSON, nullable=True)
-    format = Column(Enum(ReportFormat), default=ReportFormat.pdf)
+    format = Column(String, default=ReportFormat.pdf)
     schedule_cron = Column(String, nullable=True)   # e.g. "0 9 * * 1" = every Monday 9am
     schedule_emails = Column(JSON, nullable=True)   # list of email recipients
     is_scheduled = Column(Boolean, default=False)

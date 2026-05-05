@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, DateTime, ForeignKey, JSON, Integer, Boolean, Enum, Text
+from sqlalchemy import Column, String, DateTime, ForeignKey, JSON, Integer, Boolean, Text
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql import func
 import uuid, enum
@@ -35,7 +35,7 @@ class PipelineStep(Base):
     __tablename__ = "pipeline_steps"
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     pipeline_id = Column(UUID(as_uuid=True), ForeignKey("data_pipelines.id", ondelete="CASCADE"), nullable=False)
-    step_type = Column(Enum(StepType), nullable=False)
+    step_type = Column(String, nullable=False)
     step_order = Column(Integer, nullable=False)
     config = Column(JSON, nullable=True)
     label = Column(String, nullable=True)

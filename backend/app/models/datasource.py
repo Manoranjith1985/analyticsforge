@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, DateTime, JSON, Boolean, ForeignKey, Enum
+from sqlalchemy import Column, String, DateTime, JSON, Boolean, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql import func
 import uuid
@@ -32,9 +32,9 @@ class DataSource(Base):
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     name = Column(String, nullable=False)
     description = Column(String, nullable=True)
-    connector_type = Column(Enum(ConnectorType), nullable=False)
+    connector_type = Column(String, nullable=False)
     connection_config = Column(JSON, nullable=False)  # encrypted connection params
-    sync_frequency = Column(Enum(SyncFrequency), default=SyncFrequency.manual)
+    sync_frequency = Column(String, default=SyncFrequency.manual)
     last_synced_at = Column(DateTime(timezone=True), nullable=True)
     is_active = Column(Boolean, default=True)
     schema_info = Column(JSON, nullable=True)  # cached table/column schema

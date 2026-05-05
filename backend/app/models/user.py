@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Boolean, DateTime, Enum
+from sqlalchemy import Column, String, Boolean, DateTime
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql import func
 import uuid
@@ -19,9 +19,9 @@ class User(Base):
     email = Column(String, unique=True, index=True, nullable=False)
     full_name = Column(String, nullable=False)
     hashed_password = Column(String, nullable=False)
-    role = Column(Enum(UserRole), default=UserRole.analyst, nullable=False)
+    role = Column(String, default="analyst", nullable=False)   # String avoids PG ENUM issues
     is_active = Column(Boolean, default=True)
     is_verified = Column(Boolean, default=False)
-    preferred_language = Column(String, default="en")  # en | ta
+    preferred_language = Column(String, default="en")
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
