@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { RiAddLine, RiDeleteBinLine, RiCodeLine, RiCopyLine, RiExternalLinkLine } from 'react-icons/ri'
+import { RiAddLine, RiDeleteBinLine, RiCodeLine, RiFileCopyLine, RiExternalLinkLine } from 'react-icons/ri'
 import { embedAPI } from '../services/api'
 import toast from 'react-hot-toast'
 import { format } from 'date-fns'
@@ -107,7 +107,7 @@ export default function EmbedPage() {
             <h3 className="text-white font-semibold text-sm">Embed Code</h3>
             <div className="flex gap-2">
               <button onClick={copySnippet} className="text-gray-400 hover:text-white flex items-center gap-1 text-xs px-2 py-1 border border-gray-600 rounded">
-                <RiCopyLine /> Copy
+                <RiFileCopyLine /> Copy
               </button>
               <button onClick={() => window.open(snippet.embed_url, '_blank')} className="text-gray-400 hover:text-white flex items-center gap-1 text-xs px-2 py-1 border border-gray-600 rounded">
                 <RiExternalLinkLine /> Preview

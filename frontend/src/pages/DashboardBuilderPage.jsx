@@ -4,8 +4,8 @@ import GridLayout from 'react-grid-layout'
 import 'react-grid-layout/css/styles.css'
 import 'react-resizable/css/styles.css'
 import {
-  RiAddLine, RiArrowLeftLine, RiShareLine, RiSaveLine,
-  RiPaletteLine, RiChatLine, RiEyeLine
+  RiAddLine, RiArrowLeftLine, RiShareLine, RiSave3Line,
+  RiPaletteLine, RiMessage2Line, RiEyeOffLine
 } from 'react-icons/ri'
 import { dashboardAPI, datasourceAPI, collaborationAPI } from '../services/api'
 import toast from 'react-hot-toast'
@@ -131,7 +131,7 @@ export default function DashboardBuilderPage() {
             ))}
           </div>
           <button className="btn-secondary flex items-center gap-2 text-sm" onClick={() => setShowComments(!showComments)}>
-            <RiChatLine /> Comments
+            <RiMessage2Line /> Comments
           </button>
           <button className="btn-secondary flex items-center gap-2 text-sm" onClick={handleShare}>
             <RiShareLine /> {dashboard.is_public ? 'Unshare' : 'Share'}
