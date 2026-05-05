@@ -1,0 +1,65 @@
+##############################################################
+# AnalyticsForge — Render Blueprint
+# Deploys: PostgreSQL, Redis, FastAPI backend, React frontend
+##############################################################
+
+databases:
+  - name: analyticsforge-db
+    databaseName: analyticsforge
+    user: analyticsforge
+    plan: free                  # upgrade to starter/standard for production
+
+services:
+  # ── Redis ────────────────────────────────────────────────────────────────────
+  - type: redis
+    name: analyticsforge-redis
+    plan: free                  # upgrade for production
+    ipAllowList: []             # only allow internal connections
+
+  # ── FastAPI Backend ───────────────────────────────────────────────────────────
+  - type: web
+    name: analyticsforge-backend
+    runtime: python
+    plan: free
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: analyticsforge-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          name: analyticsforge-redis
+          type: redis
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true       # Render auto-generates a secure random value
+      - key: ACCESS_TOKEN_EXPIRE_MINUTES
+        value: "60"
+      - key: APP_ENV
+        value: production
+      - key: FRONTEND_URL
+        value: https://analyticsforge-frontend.onrender.com   # update after frontend deploys
+      - key: OPENAI_API_KEY
+        sync: false               # set manually in Render dashboard
+      - key: ANTHROPIC_API_KEY
+        sync: false               # set manually in Render dashboard
+
+  # ── React Frontend (Static Site) ─────────────────────────────────────────────
+  - type: web
+    name: analyticsforge-frontend
+    runtime: node
+    plan: free
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    startCommand: npx serve dist -l $PORT
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          name: analyticsforge-backend
+          type: web
+          property: host
+          envVarKey: RENDER_EXTERNAL_URL

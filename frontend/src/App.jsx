@@ -1,0 +1,52 @@
+import { useEffect } from 'react'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { Toaster } from 'react-hot-toast'
+import useAuthStore from './store/authStore'
+import Layout from './components/Layout/Layout'
+import LoginPage from './pages/LoginPage'
+import RegisterPage from './pages/RegisterPage'
+import DashboardsPage from './pages/DashboardsPage'
+import DashboardBuilderPage from './pages/DashboardBuilderPage'
+import DataSourcesPage from './pages/DataSourcesPage'
+import ReportsPage from './pages/ReportsPage'
+import AIChatPage from './pages/AIChatPage'
+import AnalyticsPage from './pages/AnalyticsPage'
+
+function PrivateRoute({ children }) {
+  const token = useAuthStore((s) => s.token)
+  return token ? children : <Navigate to="/login" replace />
+}
+
+export default function App() {
+  const { token, fetchMe } = useAuthStore()
+
+  useEffect(() => {
+    if (token) fetchMe()
+  }, [token])
+
+  return (
+    <BrowserRouter>
+      <Toaster position="top-right" />
+      <Routes>
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route
+          path="/"
+          element={
+            <PrivateRoute>
+              <Layout />
+            </PrivateRoute>
+          }
+        >
+          <Route index element={<Navigate to="/dashboards" replace />} />
+          <Route path="dashboards" element={<DashboardsPage />} />
+          <Route path="dashboards/:id" element={<DashboardBuilderPage />} />
+          <Route path="datasources" element={<DataSourcesPage />} />
+          <Route path="reports" element={<ReportsPage />} />
+          <Route path="ai" element={<AIChatPage />} />
+          <Route path="analytics" element={<AnalyticsPage />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  )
+}

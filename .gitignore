@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+venv/
+env/
+.env
+*.egg-info/
+dist/
+build/
+
+# Node / React
+node_modules/
+dist/
+.DS_Store
+*.local
+
+# Uploads (user data — don't commit)
+backend/uploads/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Logs
+*.log
+
+# Docker volumes
+pgdata/
