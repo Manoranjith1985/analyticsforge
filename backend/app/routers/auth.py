@@ -3,6 +3,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from pydantic import BaseModel, EmailStr
 from typing import Optional
+import traceback
 import uuid
 
 from ..database import get_db
@@ -21,7 +22,7 @@ class RegisterRequest(BaseModel):
     email: EmailStr
     full_name: str
     password: str
-    role: Optional[UserRole] = UserRole.analyst
+    role: Optional[str] = "analyst"   # plain string, not enum, avoids serialization issues
 
 
 class UserResponse(BaseModel):
@@ -45,16 +46,21 @@ class TokenResponse(BaseModel):
 
 @router.post("/register", response_model=UserResponse, status_code=201)
 def register(data: RegisterRequest, db: Session = Depends(get_db)):
-    import traceback
     try:
         existing = db.query(User).filter(User.email == data.email).first()
         if existing:
             raise HTTPException(status_code=400, detail="Email already registered")
+
+        # Normalise role to plain string value
+        role_str = data.role.value if hasattr(data.role, "value") else str(data.role)
+        if role_str not in ("admin", "analyst", "viewer"):
+            role_str = "analyst"
+
         user = User(
             email=data.email,
             full_name=data.full_name,
             hashed_password=get_password_hash(data.password),
-            role=data.role,
+            role=role_str,
         )
         db.add(user)
         db.commit()
@@ -63,19 +69,31 @@ def register(data: RegisterRequest, db: Session = Depends(get_db)):
     except HTTPException:
         raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Registration error: {str(e)}")
+        db.rollback()
+        raise HTTPException(
+            status_code=500,
+            detail=f"Registration error: {str(e)} | {traceback.format_exc()}"
+        )
 
 
 @router.post("/login", response_model=TokenResponse)
 def login(form: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
-    user = db.query(User).filter(User.email == form.username).first()
-    if not user or not verify_password(form.password, user.hashed_password):
-        raise HTTPException(status_code=401, detail="Invalid credentials")
-    token = create_access_token({"sub": str(user.id)})
-    return {
-        "access_token": token,
-        "user": user,
-    }
+    try:
+        user = db.query(User).filter(User.email == form.username).first()
+        if not user or not verify_password(form.password, user.hashed_password):
+            raise HTTPException(status_code=401, detail="Invalid credentials")
+        token = create_access_token({"sub": str(user.id)})
+        return {
+            "access_token": token,
+            "user": user,
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Login error: {str(e)} | {traceback.format_exc()}"
+        )
 
 
 @router.get("/me", response_model=UserResponse)
@@ -99,15 +117,25 @@ def update_language(
 @router.get("/debug", tags=["Debug"])
 def debug_db(db: Session = Depends(get_db)):
     """Test DB connectivity and return table info."""
-    import traceback
     try:
         from sqlalchemy import text
         result = db.execute(text("SELECT version()")).fetchone()
         user_count = db.query(User).count()
+
+        # Also check column types of the users table
+        col_info = db.execute(text("""
+            SELECT column_name, data_type, udt_name
+            FROM information_schema.columns
+            WHERE table_name = 'users' AND table_schema = 'public'
+            ORDER BY ordinal_position
+        """)).fetchall()
+        columns = [{"name": r[0], "type": r[1], "udt": r[2]} for r in col_info]
+
         return {
             "db_connected": True,
             "pg_version": result[0] if result else "unknown",
             "user_count": user_count,
+            "users_table_columns": columns,
         }
     except Exception as e:
         return {"db_connected": False, "error": str(e), "trace": traceback.format_exc()}
