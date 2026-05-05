@@ -1,3 +1,6 @@
+# Force binary wheels for heavy scientific packages — avoids source compilation on Python 3.14
+--only-binary=pandas,numpy,scikit-learn,statsmodels,Pillow
+
 fastapi==0.111.0
 uvicorn[standard]==0.29.0
 sqlalchemy==2.0.30
@@ -8,21 +11,26 @@ passlib[bcrypt]==1.7.4
 python-multipart==0.0.9
 pydantic==2.7.1
 pydantic-settings==2.2.1
-pandas==2.2.2
-numpy==1.26.4
-openai==1.30.1
-anthropic==0.26.0
+
+# Scientific — require binary wheels (no source compilation)
+pandas>=2.2.2
+numpy>=1.26.4
+scikit-learn>=1.4.2
+statsmodels>=0.14.2
+
+# AI
+openai>=1.30.1
+anthropic>=0.26.0
 httpx==0.27.0
+
+# Utilities
 python-dotenv==1.0.1
-redis==5.0.4
 pymysql==1.1.1
 openpyxl==3.1.2
 aiofiles==23.2.1
-scikit-learn==1.4.2
-statsmodels==0.14.2
 reportlab==4.2.0
 apscheduler==3.10.4
-fastapi-mail==1.4.1
 jinja2==3.1.4
 python-slugify==8.0.4
-Pillow==10.3.0
+Pillow>=10.3.0
+fastapi-mail==1.4.1
