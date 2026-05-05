@@ -45,19 +45,25 @@ class TokenResponse(BaseModel):
 
 @router.post("/register", response_model=UserResponse, status_code=201)
 def register(data: RegisterRequest, db: Session = Depends(get_db)):
-    existing = db.query(User).filter(User.email == data.email).first()
-    if existing:
-        raise HTTPException(status_code=400, detail="Email already registered")
-    user = User(
-        email=data.email,
-        full_name=data.full_name,
-        hashed_password=get_password_hash(data.password),
-        role=data.role,
-    )
-    db.add(user)
-    db.commit()
-    db.refresh(user)
-    return user
+    import traceback
+    try:
+        existing = db.query(User).filter(User.email == data.email).first()
+        if existing:
+            raise HTTPException(status_code=400, detail="Email already registered")
+        user = User(
+            email=data.email,
+            full_name=data.full_name,
+            hashed_password=get_password_hash(data.password),
+            role=data.role,
+        )
+        db.add(user)
+        db.commit()
+        db.refresh(user)
+        return user
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Registration error: {str(e)}")
 
 
 @router.post("/login", response_model=TokenResponse)
@@ -88,3 +94,20 @@ def update_language(
     current_user.preferred_language = language
     db.commit()
     return {"message": f"Language updated to {language}"}
+
+
+@router.get("/debug", tags=["Debug"])
+def debug_db(db: Session = Depends(get_db)):
+    """Test DB connectivity and return table info."""
+    import traceback
+    try:
+        from sqlalchemy import text
+        result = db.execute(text("SELECT version()")).fetchone()
+        user_count = db.query(User).count()
+        return {
+            "db_connected": True,
+            "pg_version": result[0] if result else "unknown",
+            "user_count": user_count,
+        }
+    except Exception as e:
+        return {"db_connected": False, "error": str(e), "trace": traceback.format_exc()}
