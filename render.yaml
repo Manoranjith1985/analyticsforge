@@ -1,29 +1,29 @@
 ##############################################################
 # AnalyticsForge — Render Blueprint
-# Deploys: PostgreSQL, Redis, FastAPI backend, React frontend
+# Backend:  Docker Web Service  (python:3.12-slim, no build issues)
+# Frontend: Static Site         (free CDN, never spins down)
 ##############################################################
 
 databases:
   - name: analyticsforge-db
     databaseName: analyticsforge
     user: analyticsforge
-    plan: free                  # upgrade to starter/standard for production
+    plan: free
 
 services:
-  # ── Redis ────────────────────────────────────────────────────────────────────
+  # ── Redis ─────────────────────────────────────────────────────────────────────
   - type: redis
     name: analyticsforge-redis
-    plan: free                  # upgrade for production
-    ipAllowList: []             # only allow internal connections
+    plan: free
+    ipAllowList: []
 
-  # ── FastAPI Backend ───────────────────────────────────────────────────────────
+  # ── FastAPI Backend (Docker) ───────────────────────────────────────────────────
   - type: web
     name: analyticsforge-backend
-    runtime: python
+    runtime: docker
     plan: free
     rootDir: backend
-    buildCommand: pip install -r requirements.txt
-    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    dockerfilePath: ./Dockerfile
     healthCheckPath: /api/health
     envVars:
       - key: DATABASE_URL
@@ -36,30 +36,37 @@ services:
           type: redis
           property: connectionString
       - key: SECRET_KEY
-        generateValue: true       # Render auto-generates a secure random value
+        generateValue: true
       - key: ACCESS_TOKEN_EXPIRE_MINUTES
         value: "60"
       - key: APP_ENV
         value: production
       - key: FRONTEND_URL
-        value: https://analyticsforge-frontend.onrender.com   # update after frontend deploys
+        value: https://analyticsforge-frontend.onrender.com
       - key: OPENAI_API_KEY
-        sync: false               # set manually in Render dashboard
+        sync: false
       - key: ANTHROPIC_API_KEY
-        sync: false               # set manually in Render dashboard
+        sync: false
 
-  # ── React Frontend (Static Site) ─────────────────────────────────────────────
+  # ── React Frontend (Static Site — free, CDN, no spin-down) ────────────────────
   - type: web
     name: analyticsforge-frontend
-    runtime: node
+    runtime: static
     plan: free
     rootDir: frontend
     buildCommand: npm install && npm run build
-    startCommand: npx serve dist -l $PORT
+    staticPublishPath: ./dist
+    headers:
+      - path: /*
+        name: Cache-Control
+        value: no-cache
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
     envVars:
       - key: VITE_API_URL
         fromService:
           name: analyticsforge-backend
           type: web
           property: host
-          envVarKey: RENDER_EXTERNAL_URL
