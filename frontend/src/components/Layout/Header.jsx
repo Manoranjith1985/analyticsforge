@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import { RiLogoutBoxLine, RiGlobalLine } from 'react-icons/ri'
+import { RiLogoutBoxLine, RiEarthLine } from 'react-icons/ri'
 import useAuthStore from '../../store/authStore'
 import toast from 'react-hot-toast'
 
@@ -29,7 +29,7 @@ export default function Header() {
           className="flex items-center gap-1.5 text-sm text-gray-600 hover:text-gray-900 border border-gray-200 rounded-lg px-3 py-1.5"
           title="Toggle language"
         >
-          <RiGlobalLine />
+          <RiEarthLine />
           {user?.preferred_language === 'ta' ? 'தமிழ்' : 'EN'}
         </button>
 

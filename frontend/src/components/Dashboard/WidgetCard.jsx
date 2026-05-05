@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import ReactApexChart from 'react-apexcharts'
-import { RiDeleteBinLine, RiDragMove2Line, RiRefreshLine } from 'react-icons/ri'
+import { RiDeleteBinLine, RiDraggable, RiRefreshLine } from 'react-icons/ri'
 import { datasourceAPI } from '../../services/api'
 
 const APEX_TYPES = ['bar','line','area','pie','donut','scatter','heatmap','radar','treemap','candlestick','rangeBar','radialBar','polarArea','bubble']
@@ -143,7 +143,7 @@ export default function WidgetCard({ widget, theme, onDelete }) {
         <div className="flex items-center gap-1 flex-shrink-0">
           <button onClick={load} className="text-gray-400 hover:text-gray-600 p-1 rounded" title="Refresh"><RiRefreshLine className="text-sm" /></button>
           <button onClick={onDelete} className="text-gray-400 hover:text-red-500 p-1 rounded" title="Delete"><RiDeleteBinLine className="text-sm" /></button>
-          <RiDragMove2Line className="text-gray-300 text-sm" />
+          <RiDraggable className="text-gray-300 text-sm" />
         </div>
       </div>
       <div className="flex-1 overflow-hidden p-2">{renderContent()}</div>

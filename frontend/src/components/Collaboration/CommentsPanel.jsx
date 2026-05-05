@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { RiCloseLine, RiSendPlanLine, RiCheckLine, RiDeleteBinLine } from 'react-icons/ri'
+import { RiCloseLine, RiArrowRightLine, RiCheckLine, RiDeleteBinLine } from 'react-icons/ri'
 import { collaborationAPI } from '../../services/api'
 import { format } from 'date-fns'
 
@@ -93,7 +93,7 @@ export default function CommentsPanel({ dashboardId, onClose }) {
           onChange={e => setText(e.target.value)}
         />
         <button type="submit" disabled={!text.trim()} className="btn-primary px-3 py-2 disabled:opacity-50">
-          <RiSendPlanLine />
+          <RiArrowRightLine />
         </button>
       </form>
     </div>

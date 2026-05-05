@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { RiAddLine, RiDeleteBinLine, RiPlayLine, RiTimeLine, RiToggleLine, RiCheckLine, RiCloseLine } from 'react-icons/ri'
+import { RiAddLine, RiDeleteBinLine, RiPlayLine, RiTimeLine, RiSettings3Line, RiCheckLine, RiCloseLine } from 'react-icons/ri'
 import { scheduledReportsAPI, reportAPI } from '../services/api'
 import toast from 'react-hot-toast'
 import { format } from 'date-fns'
@@ -115,7 +115,7 @@ export default function ScheduledReportsPage() {
                 </button>
                 <button onClick={() => handleToggle(sr.id)} title={sr.is_active ? 'Deactivate' : 'Activate'}
                   className={`p-1.5 rounded-lg text-sm ${sr.is_active ? 'text-green-500 hover:text-red-500' : 'text-gray-400 hover:text-green-500'}`}>
-                  <RiToggleLine className="text-lg" />
+                  <RiSettings3Line className="text-lg" />
                 </button>
                 <button onClick={() => handleDelete(sr.id)} className="text-gray-400 hover:text-red-500 p-1.5">
                   <RiDeleteBinLine />
