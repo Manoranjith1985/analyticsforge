@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { RiAddLine, RiDeleteBinLine, RiPlayLine, RiArrowRightLine, RiFlowChart } from 'react-icons/ri'
+import { RiAddLine, RiDeleteBinLine, RiPlayLine, RiArrowRightLine, RiGitMergeLine } from 'react-icons/ri'
 import { pipelineAPI, datasourceAPI } from '../services/api'
 import toast from 'react-hot-toast'
 
@@ -71,7 +71,7 @@ export default function DataPipelinePage() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {pipelines.length === 0 && (
           <div className="col-span-2 text-center py-16 bg-white rounded-xl border-2 border-dashed border-gray-200">
-            <RiFlowChart className="text-5xl text-gray-300 mx-auto mb-3" />
+            <RiGitMergeLine className="text-5xl text-gray-300 mx-auto mb-3" />
             <p className="text-gray-400">No pipelines yet. Create your first data pipeline.</p>
           </div>
         )}

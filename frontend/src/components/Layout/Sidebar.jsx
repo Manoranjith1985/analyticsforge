@@ -1,9 +1,9 @@
 import { NavLink, useNavigate } from 'react-router-dom'
 import {
   RiDashboardLine, RiDatabase2Line, RiFileChartLine, RiRobotLine,
-  RiLineChartLine, RiSettings3Line, RiFlowChart, RiSlideshowLine,
+  RiLineChartLine, RiSettings3Line, RiSlideshowLine,
   RiShieldLine, RiTimeLine, RiCodeLine, RiLogoutBoxLine,
-  RiBrainLine,
+  RiGitMergeLine, RiCpuLine,
 } from 'react-icons/ri'
 import clsx from 'clsx'
 import useAuthStore from '../../store/authStore'
@@ -12,31 +12,31 @@ const NAV_SECTIONS = [
   {
     label: 'Core',
     items: [
-      { to: '/dashboards',  icon: RiDashboardLine,  label: 'Dashboards' },
-      { to: '/datasources', icon: RiDatabase2Line,  label: 'Data Sources' },
-      { to: '/reports',     icon: RiFileChartLine,  label: 'Reports' },
-      { to: '/analytics',   icon: RiLineChartLine,  label: 'Analytics' },
+      { to: '/dashboards',  icon: RiDashboardLine, label: 'Dashboards' },
+      { to: '/datasources', icon: RiDatabase2Line, label: 'Data Sources' },
+      { to: '/reports',     icon: RiFileChartLine, label: 'Reports' },
+      { to: '/analytics',   icon: RiLineChartLine, label: 'Analytics' },
     ],
   },
   {
     label: 'AI & ML',
     items: [
-      { to: '/ai',     icon: RiRobotLine,   label: 'AI Assistant' },
-      { to: '/automl', icon: RiBrainLine,   label: 'AutoML' },
+      { to: '/ai',     icon: RiRobotLine, label: 'AI Assistant' },
+      { to: '/automl', icon: RiCpuLine,   label: 'AutoML' },
     ],
   },
   {
     label: 'Build',
     items: [
-      { to: '/pipelines', icon: RiFlowChart,     label: 'Pipelines' },
+      { to: '/pipelines', icon: RiGitMergeLine, label: 'Pipelines' },
       { to: '/stories',   icon: RiSlideshowLine, label: 'Data Stories' },
     ],
   },
   {
     label: 'Delivery',
     items: [
-      { to: '/scheduled-reports', icon: RiTimeLine,  label: 'Scheduled Reports' },
-      { to: '/embed',             icon: RiCodeLine,  label: 'Embed & API' },
+      { to: '/scheduled-reports', icon: RiTimeLine, label: 'Scheduled Reports' },
+      { to: '/embed',             icon: RiCodeLine, label: 'Embed & API' },
     ],
   },
   {

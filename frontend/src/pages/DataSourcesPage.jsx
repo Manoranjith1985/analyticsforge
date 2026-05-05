@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { RiAddLine, RiDatabase2Line, RiDeleteBin6Line, RiUploadLine } from 'react-icons/ri'
+import { RiAddLine, RiDatabase2Line, RiDeleteBinLine, RiUploadLine } from 'react-icons/ri'
 import { datasourceAPI } from '../services/api'
 import toast from 'react-hot-toast'
 
@@ -138,7 +138,7 @@ export default function DataSourcesPage() {
                 </div>
                 <button onClick={() => handleDelete(s.id)}
                   className="opacity-0 group-hover:opacity-100 text-gray-400 hover:text-red-500 transition-all">
-                  <RiDeleteBin6Line />
+                  <RiDeleteBinLine />
                 </button>
               </div>
               <h3 className="font-semibold text-gray-900">{s.name}</h3>

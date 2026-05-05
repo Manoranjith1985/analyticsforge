@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { RiAddLine, RiFileChartLine, RiDeleteBin6Line, RiDownloadLine } from 'react-icons/ri'
+import { RiAddLine, RiFileChartLine, RiDeleteBinLine, RiDownloadLine } from 'react-icons/ri'
 import { reportAPI, datasourceAPI } from '../services/api'
 import toast from 'react-hot-toast'
 
@@ -132,7 +132,7 @@ export default function ReportsPage() {
                   <RiDownloadLine /> Export
                 </button>
                 <button onClick={() => handleDelete(r.id)} className="text-gray-400 hover:text-red-500">
-                  <RiDeleteBin6Line />
+                  <RiDeleteBinLine />
                 </button>
               </div>
             </div>

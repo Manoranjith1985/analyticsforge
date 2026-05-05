@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { RiRobot2Line, RiPlayLine, RiBarChartBoxLine } from 'react-icons/ri'
+import { RiRobotLine, RiPlayLine, RiBarChartLine } from 'react-icons/ri'
 import { automlAPI, datasourceAPI } from '../services/api'
 import toast from 'react-hot-toast'
 
@@ -57,7 +57,7 @@ export default function AutoMLPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3">
-        <RiRobot2Line className="text-3xl text-indigo-600" />
+        <RiRobotLine className="text-3xl text-indigo-600" />
         <div>
           <h1 className="text-2xl font-bold text-gray-900">AutoML</h1>
           <p className="text-gray-500 text-sm mt-0.5">Train ML models and run clustering — no code needed</p>
@@ -141,7 +141,7 @@ export default function AutoMLPage() {
 
         {/* Results */}
         <div className="bg-white rounded-xl border border-gray-200 p-5">
-          <h2 className="font-semibold text-gray-800 mb-4 flex items-center gap-2"><RiBarChartBoxLine /> Results</h2>
+          <h2 className="font-semibold text-gray-800 mb-4 flex items-center gap-2"><RiBarChartLine /> Results</h2>
           {!result && !running && <p className="text-gray-400 text-sm text-center py-12">Run the model to see results here.</p>}
           {running && <div className="text-center py-12 text-indigo-500 animate-pulse">Processing data…</div>}
           {result && !running && (

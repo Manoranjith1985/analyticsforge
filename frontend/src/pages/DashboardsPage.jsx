@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { RiAddLine, RiDashboardLine, RiDeleteBin6Line } from 'react-icons/ri'
+import { RiAddLine, RiDashboardLine, RiDeleteBinLine } from 'react-icons/ri'
 import { dashboardAPI } from '../services/api'
 import toast from 'react-hot-toast'
 
@@ -100,7 +100,7 @@ export default function DashboardsPage() {
                   onClick={(e) => deleteDashboard(d.id, e)}
                   className="opacity-0 group-hover:opacity-100 text-gray-400 hover:text-red-500 transition-all"
                 >
-                  <RiDeleteBin6Line />
+                  <RiDeleteBinLine />
                 </button>
               </div>
               <h3 className="font-semibold text-gray-900">{d.name}</h3>

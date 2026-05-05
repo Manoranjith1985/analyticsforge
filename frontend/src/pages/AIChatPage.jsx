@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { RiSendPlaneLine, RiRobotLine, RiUserLine, RiDatabase2Line } from 'react-icons/ri'
+import { RiSendPlanLine, RiRobotLine, RiUserLine, RiDatabase2Line } from 'react-icons/ri'
 import { aiAPI, datasourceAPI } from '../services/api'
 import toast from 'react-hot-toast'
 
@@ -142,7 +142,7 @@ export default function AIChatPage() {
           disabled={loading}
         />
         <button type="submit" className="btn-primary px-5 flex items-center gap-2" disabled={loading || !input.trim()}>
-          <RiSendPlaneLine />
+          <RiSendPlanLine />
         </button>
       </form>
     </div>
