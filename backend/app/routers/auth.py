@@ -4,10 +4,9 @@ from sqlalchemy.orm import Session
 from pydantic import BaseModel, EmailStr
 from typing import Optional
 import traceback
-import uuid
 
 from ..database import get_db
-from ..models.user import User, UserRole
+from ..models.user import User
 from ..utils.security import (
     verify_password, get_password_hash,
     create_access_token, get_current_user
@@ -16,13 +15,26 @@ from ..utils.security import (
 router = APIRouter(prefix="/api/auth", tags=["Authentication"])
 
 
+# ── Helpers ───────────────────────────────────────────────────────────────────
+
+def _user_dict(user: User) -> dict:
+    """Convert ORM User to a plain dict — avoids UUID / Pydantic serialisation issues."""
+    return {
+        "id": str(user.id),
+        "email": user.email,
+        "full_name": user.full_name,
+        "role": str(user.role),
+        "preferred_language": str(user.preferred_language or "en"),
+    }
+
+
 # ── Schemas ──────────────────────────────────────────────────────────────────
 
 class RegisterRequest(BaseModel):
     email: EmailStr
     full_name: str
     password: str
-    role: Optional[str] = "analyst"   # plain string, not enum, avoids serialization issues
+    role: Optional[str] = "analyst"
 
 
 class UserResponse(BaseModel):
@@ -31,9 +43,6 @@ class UserResponse(BaseModel):
     full_name: str
     role: str
     preferred_language: str
-
-    class Config:
-        from_attributes = True
 
 
 class TokenResponse(BaseModel):
@@ -51,8 +60,7 @@ def register(data: RegisterRequest, db: Session = Depends(get_db)):
         if existing:
             raise HTTPException(status_code=400, detail="Email already registered")
 
-        # Normalise role to plain string value
-        role_str = data.role.value if hasattr(data.role, "value") else str(data.role)
+        role_str = str(data.role) if data.role else "analyst"
         if role_str not in ("admin", "analyst", "viewer"):
             role_str = "analyst"
 
@@ -65,7 +73,7 @@ def register(data: RegisterRequest, db: Session = Depends(get_db)):
         db.add(user)
         db.commit()
         db.refresh(user)
-        return user
+        return _user_dict(user)
     except HTTPException:
         raise
     except Exception as e:
@@ -85,7 +93,8 @@ def login(form: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get
         token = create_access_token({"sub": str(user.id)})
         return {
             "access_token": token,
-            "user": user,
+            "token_type": "bearer",
+            "user": _user_dict(user),
         }
     except HTTPException:
         raise
@@ -98,7 +107,7 @@ def login(form: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get
 
 @router.get("/me", response_model=UserResponse)
 def get_me(current_user: User = Depends(get_current_user)):
-    return current_user
+    return _user_dict(current_user)
 
 
 @router.patch("/me/language")
@@ -116,26 +125,16 @@ def update_language(
 
 @router.get("/debug", tags=["Debug"])
 def debug_db(db: Session = Depends(get_db)):
-    """Test DB connectivity and return table info."""
+    """Test DB connectivity, column types, and list user emails."""
     try:
         from sqlalchemy import text
-        result = db.execute(text("SELECT version()")).fetchone()
-        user_count = db.query(User).count()
-
-        # Also check column types of the users table
-        col_info = db.execute(text("""
-            SELECT column_name, data_type, udt_name
-            FROM information_schema.columns
-            WHERE table_name = 'users' AND table_schema = 'public'
-            ORDER BY ordinal_position
-        """)).fetchall()
-        columns = [{"name": r[0], "type": r[1], "udt": r[2]} for r in col_info]
-
+        pg_ver = db.execute(text("SELECT version()")).fetchone()[0]
+        users = db.query(User).all()
         return {
             "db_connected": True,
-            "pg_version": result[0] if result else "unknown",
-            "user_count": user_count,
-            "users_table_columns": columns,
+            "pg_version": pg_ver,
+            "user_count": len(users),
+            "users": [{"email": u.email, "role": u.role, "active": u.is_active} for u in users],
         }
     except Exception as e:
         return {"db_connected": False, "error": str(e), "trace": traceback.format_exc()}
