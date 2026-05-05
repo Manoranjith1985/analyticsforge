@@ -1,6 +1,6 @@
 ##############################################################
 # AnalyticsForge — Render Blueprint
-# Backend:  Docker Web Service  (python:3.12-slim, no build issues)
+# Backend:  Docker Web Service  (python:3.12-slim)
 # Frontend: Static Site         (free CDN, never spins down)
 ##############################################################
 
@@ -11,12 +11,6 @@ databases:
     plan: free
 
 services:
-  # ── Redis ─────────────────────────────────────────────────────────────────────
-  - type: redis
-    name: analyticsforge-redis
-    plan: free
-    ipAllowList: []
-
   # ── FastAPI Backend (Docker) ───────────────────────────────────────────────────
   - type: web
     name: analyticsforge-backend
@@ -30,11 +24,6 @@ services:
         fromDatabase:
           name: analyticsforge-db
           property: connectionString
-      - key: REDIS_URL
-        fromService:
-          name: analyticsforge-redis
-          type: redis
-          property: connectionString
       - key: SECRET_KEY
         generateValue: true
       - key: ACCESS_TOKEN_EXPIRE_MINUTES
@@ -47,8 +36,16 @@ services:
         sync: false
       - key: ANTHROPIC_API_KEY
         sync: false
+      - key: SMTP_HOST
+        sync: false
+      - key: SMTP_PORT
+        value: "587"
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASSWORD
+        sync: false
 
-  # ── React Frontend (Static Site — free, CDN, no spin-down) ────────────────────
+  # ── React Frontend (Static Site) ──────────────────────────────────────────────
   - type: web
     name: analyticsforge-frontend
     runtime: static
@@ -66,7 +63,4 @@ services:
         destination: /index.html
     envVars:
       - key: VITE_API_URL
-        fromService:
-          name: analyticsforge-backend
-          type: web
-          property: host
+        sync: false

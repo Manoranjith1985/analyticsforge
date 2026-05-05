@@ -11,6 +11,12 @@ import DataSourcesPage from './pages/DataSourcesPage'
 import ReportsPage from './pages/ReportsPage'
 import AIChatPage from './pages/AIChatPage'
 import AnalyticsPage from './pages/AnalyticsPage'
+import DataPipelinePage from './pages/DataPipelinePage'
+import StoriesPage from './pages/StoriesPage'
+import AdminPage from './pages/AdminPage'
+import AutoMLPage from './pages/AutoMLPage'
+import EmbedPage from './pages/EmbedPage'
+import ScheduledReportsPage from './pages/ScheduledReportsPage'
 
 function PrivateRoute({ children }) {
   const token = useAuthStore((s) => s.token)
@@ -45,6 +51,12 @@ export default function App() {
           <Route path="reports" element={<ReportsPage />} />
           <Route path="ai" element={<AIChatPage />} />
           <Route path="analytics" element={<AnalyticsPage />} />
+          <Route path="pipelines" element={<DataPipelinePage />} />
+          <Route path="stories" element={<StoriesPage />} />
+          <Route path="automl" element={<AutoMLPage />} />
+          <Route path="embed" element={<EmbedPage />} />
+          <Route path="scheduled-reports" element={<ScheduledReportsPage />} />
+          <Route path="admin" element={<AdminPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -1,7 +1,5 @@
 import axios from 'axios'
 
-// In development, Vite proxies /api → localhost:8000
-// In production on Render, VITE_API_URL is set to the backend's Render URL
 const BASE_URL = import.meta.env.VITE_API_URL
   ? `${import.meta.env.VITE_API_URL}/api`
   : '/api'
@@ -11,14 +9,12 @@ const api = axios.create({
   headers: { 'Content-Type': 'application/json' },
 })
 
-// Attach JWT token to every request
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('af_token')
   if (token) config.headers.Authorization = `Bearer ${token}`
   return config
 })
 
-// Redirect to login on 401
 api.interceptors.response.use(
   (res) => res,
   (err) => {
@@ -30,7 +26,6 @@ api.interceptors.response.use(
   }
 )
 
-// ── Auth ──────────────────────────────────────────────────────────────────────
 export const authAPI = {
   login: (email, password) => {
     const form = new URLSearchParams({ username: email, password })
@@ -41,7 +36,6 @@ export const authAPI = {
   setLanguage: (lang) => api.patch(`/auth/me/language?language=${lang}`),
 }
 
-// ── Data Sources ──────────────────────────────────────────────────────────────
 export const datasourceAPI = {
   list: () => api.get('/datasources/'),
   create: (data) => api.post('/datasources/', data),
@@ -56,11 +50,11 @@ export const datasourceAPI = {
   },
 }
 
-// ── Dashboards ────────────────────────────────────────────────────────────────
 export const dashboardAPI = {
   list: () => api.get('/dashboards/'),
   create: (data) => api.post('/dashboards/', data),
   get: (id) => api.get(`/dashboards/${id}`),
+  update: (id, data) => api.patch(`/dashboards/${id}`, data),
   delete: (id) => api.delete(`/dashboards/${id}`),
   share: (id) => api.post(`/dashboards/${id}/share`),
   addWidget: (dashboardId, data) => api.post(`/dashboards/${dashboardId}/widgets`, data),
@@ -68,7 +62,6 @@ export const dashboardAPI = {
   deleteWidget: (dashboardId, widgetId) => api.delete(`/dashboards/${dashboardId}/widgets/${widgetId}`),
 }
 
-// ── Reports ───────────────────────────────────────────────────────────────────
 export const reportAPI = {
   list: () => api.get('/reports/'),
   create: (data) => api.post('/reports/', data),
@@ -77,7 +70,6 @@ export const reportAPI = {
   export: (id) => api.get(`/reports/${id}/export`, { responseType: 'blob' }),
 }
 
-// ── AI ────────────────────────────────────────────────────────────────────────
 export const aiAPI = {
   chat: (question, messages, datasource_id) =>
     api.post('/ai/chat', { question, messages, datasource_id }),
@@ -89,10 +81,67 @@ export const aiAPI = {
     api.post('/ai/anomaly-detect', { datasource_id, query }),
 }
 
-// ── Analytics ─────────────────────────────────────────────────────────────────
 export const analyticsAPI = {
   forecast: (data) => api.post('/analytics/forecast', data),
   stats: (data) => api.post('/analytics/stats', data),
+}
+
+export const collaborationAPI = {
+  listTeams: () => api.get('/collaboration/teams'),
+  createTeam: (data) => api.post('/collaboration/teams', data),
+  addMember: (teamId, data) => api.post(`/collaboration/teams/${teamId}/members`, data),
+  getMembers: (teamId) => api.get(`/collaboration/teams/${teamId}/members`),
+  getComments: (dashboardId) => api.get(`/collaboration/dashboards/${dashboardId}/comments`),
+  addComment: (dashboardId, data) => api.post(`/collaboration/dashboards/${dashboardId}/comments`, data),
+  resolveComment: (commentId) => api.patch(`/collaboration/comments/${commentId}/resolve`),
+  deleteComment: (commentId) => api.delete(`/collaboration/comments/${commentId}`),
+}
+
+export const pipelineAPI = {
+  list: () => api.get('/pipelines/'),
+  create: (data) => api.post('/pipelines/', data),
+  get: (id) => api.get(`/pipelines/${id}`),
+  delete: (id) => api.delete(`/pipelines/${id}`),
+  run: (id, data) => api.post(`/pipelines/${id}/run`, data),
+}
+
+export const storiesAPI = {
+  list: () => api.get('/stories/'),
+  create: (data) => api.post('/stories/', data),
+  get: (id) => api.get(`/stories/${id}`),
+  delete: (id) => api.delete(`/stories/${id}`),
+  addSlide: (storyId, data) => api.post(`/stories/${storyId}/slides`, data),
+  deleteSlide: (storyId, slideId) => api.delete(`/stories/${storyId}/slides/${slideId}`),
+  share: (id) => api.post(`/stories/${id}/share`),
+}
+
+export const embedAPI = {
+  listTokens: () => api.get('/embed/tokens'),
+  createToken: (data) => api.post('/embed/tokens', data),
+  revokeToken: (id) => api.delete(`/embed/tokens/${id}`),
+  getSnippet: (id) => api.get(`/embed/snippet/${id}`),
+}
+
+export const adminAPI = {
+  listUsers: () => api.get('/admin/users'),
+  updateUser: (id, data) => api.patch(`/admin/users/${id}`, data),
+  deleteUser: (id) => api.delete(`/admin/users/${id}`),
+  getAuditLogs: (params) => api.get('/admin/audit-logs', { params }),
+  getStats: () => api.get('/admin/stats'),
+}
+
+export const automlAPI = {
+  train: (data) => api.post('/automl/train', data),
+  cluster: (data) => api.post('/automl/cluster', data),
+}
+
+export const scheduledReportsAPI = {
+  list: () => api.get('/scheduled-reports/'),
+  create: (data) => api.post('/scheduled-reports/', data),
+  toggle: (id) => api.patch(`/scheduled-reports/${id}/toggle`),
+  delete: (id) => api.delete(`/scheduled-reports/${id}`),
+  runNow: (id) => api.post(`/scheduled-reports/${id}/run-now`),
+  getExecutions: (id) => api.get(`/scheduled-reports/${id}/executions`),
 }
 
 export default api

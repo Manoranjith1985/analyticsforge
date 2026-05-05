@@ -1,13 +1,14 @@
 {
   "name": "analyticsforge-frontend",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "private": true,
   "dependencies": {
-    "serve": "^14.2.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.23.1",
     "recharts": "^2.12.7",
+    "apexcharts": "^3.49.0",
+    "react-apexcharts": "^1.4.0",
     "axios": "^1.7.2",
     "react-grid-layout": "^1.4.4",
     "react-select": "^5.8.0",
@@ -16,7 +17,10 @@
     "zustand": "^4.5.2",
     "date-fns": "^3.6.0",
     "@headlessui/react": "^2.0.4",
-    "clsx": "^2.1.1"
+    "clsx": "^2.1.1",
+    "react-markdown": "^9.0.1",
+    "react-colorful": "^5.6.1",
+    "serve": "^14.2.3"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.3.0",

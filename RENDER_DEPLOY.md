@@ -1,116 +1,71 @@
-# Deploying AnalyticsForge to Render
+# AnalyticsForge — Render Deployment Guide
 
-Follow these steps to deploy the full app on [render.com](https://render.com).
+## One-click Deploy (Recommended)
 
----
-
-## Prerequisites
-
-- A [Render account](https://render.com) (free tier works for testing)
-- Your code pushed to a **GitHub or GitLab repository**
-- An OpenAI or Anthropic API key (for AI features)
+1. Push this repo to GitHub (run `push_update.ps1`)
+2. Go to https://dashboard.render.com → **New → Blueprint**
+3. Connect your GitHub repo `Manoranjith1985/analyticsforge`
+4. Render reads `render.yaml` and creates all services automatically
+5. Click **Apply**
 
 ---
 
-## Step 1 — Push to GitHub
+## Environment Variables to Set Manually
 
-```bash
-cd "Analytics Bot"
-git init
-git add .
-git commit -m "Initial AnalyticsForge MVP"
+After the Blueprint applies, set these env vars in the Render dashboard:
 
-# Create a repo on github.com, then:
-git remote add origin https://github.com/YOUR_USERNAME/analyticsforge.git
-git push -u origin main
-```
+### Backend service (`analyticsforge-backend`):
+| Key | Value |
+|-----|-------|
+| `OPENAI_API_KEY` | Your OpenAI key (sk-...) |
+| `ANTHROPIC_API_KEY` | Your Anthropic key (optional) |
+| `SMTP_HOST` | e.g. `smtp.gmail.com` |
+| `SMTP_USER` | Your email address |
+| `SMTP_PASSWORD` | Your email app password |
 
----
-
-## Step 2 — Deploy using Render Blueprint (Recommended)
-
-1. Go to [dashboard.render.com](https://dashboard.render.com)
-2. Click **"New"** → **"Blueprint"**
-3. Connect your GitHub repo
-4. Render will detect `render.yaml` and automatically create:
-   - ✅ PostgreSQL database (`analyticsforge-db`)
-   - ✅ Redis instance (`analyticsforge-redis`)
-   - ✅ FastAPI backend (`analyticsforge-backend`)
-   - ✅ React frontend (`analyticsforge-frontend`)
-
----
-
-## Step 3 — Set Secret Environment Variables
-
-After the Blueprint deploys, go to each service and set these manually:
-
-### Backend service (`analyticsforge-backend`) → Environment tab:
-
-| Variable | Value |
-|----------|-------|
-| `OPENAI_API_KEY` | `sk-...` (your OpenAI key) |
-| `ANTHROPIC_API_KEY` | `sk-ant-...` (your Anthropic key) |
-| `FRONTEND_URL` | The URL of your deployed frontend (e.g. `https://analyticsforge-frontend.onrender.com`) |
-
-> `SECRET_KEY` and `DATABASE_URL` are auto-set by Render.
-
----
-
-## Step 4 — Set Frontend Backend URL
-
-In the frontend service (`analyticsforge-frontend`) → Environment tab:
-
-| Variable | Value |
-|----------|-------|
+### Frontend service (`analyticsforge-frontend`):
+| Key | Value |
+|-----|-------|
 | `VITE_API_URL` | Your backend URL, e.g. `https://analyticsforge-backend.onrender.com` |
 
-Then trigger a **Manual Deploy** on the frontend to rebuild with the correct URL.
+> **Important:** After setting `VITE_API_URL`, trigger a manual redeploy of the frontend so the new build picks it up.
 
 ---
 
-## Step 5 — Done! 🎉
+## Manual Service Setup (Alternative)
 
-Your app will be live at:
-- **Frontend**: `https://analyticsforge-frontend.onrender.com`
-- **Backend API docs**: `https://analyticsforge-backend.onrender.com/api/docs`
+### Backend
+- New Web Service → **Docker** runtime
+- Root Directory: `backend`
+- Dockerfile path: `./Dockerfile`
+- Health check: `/api/health`
+- Add env vars listed above
 
----
-
-## Manual Service Creation (Alternative to Blueprint)
-
-If you prefer to create services one by one:
-
-### 1. PostgreSQL Database
-- New → PostgreSQL
-- Name: `analyticsforge-db`
-- Plan: Free
-
-### 2. Redis
-- New → Redis
-- Name: `analyticsforge-redis`
-- Plan: Free
-
-### 3. Backend (Web Service)
-- New → Web Service → Connect GitHub repo
-- **Root Directory**: `backend`
-- **Runtime**: Python 3
-- **Build Command**: `pip install -r requirements.txt`
-- **Start Command**: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
-- **Health Check Path**: `/api/health`
-- Add env vars: `DATABASE_URL` (from DB), `REDIS_URL` (from Redis), `SECRET_KEY` (generate), `OPENAI_API_KEY`
-
-### 4. Frontend (Web Service)
-- New → Web Service → Connect GitHub repo
-- **Root Directory**: `frontend`
-- **Runtime**: Node
-- **Build Command**: `npm install && npm run build`
-- **Start Command**: `npx serve dist -l $PORT`
-- Add env var: `VITE_API_URL` = your backend Render URL
+### Frontend
+- New Static Site
+- Root Directory: `frontend`
+- Build Command: `npm install && npm run build`
+- Publish Directory: `dist`
+- Add `VITE_API_URL` env var
 
 ---
 
-## Notes on Free Tier
+## Local Development
 
-- Free services **spin down after 15 min of inactivity** — first request after sleep takes ~30s
-- PostgreSQL free tier has a **90-day limit** — upgrade to Starter ($7/mo) for production
-- For production, upgrade backend to **Starter** ($7/mo) for always-on service
+```bash
+# Backend
+cd backend
+python -m venv venv
+source venv/bin/activate   # Windows: venv\Scripts\activate
+pip install -r requirements.txt
+cp .env.example .env       # fill in your values
+uvicorn app.main:app --reload
+
+# Frontend (separate terminal)
+cd frontend
+npm install
+npm run dev
+```
+
+Frontend runs at http://localhost:3000  
+Backend API docs at http://localhost:8000/api/docs

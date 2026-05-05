@@ -30,3 +30,7 @@ backend/uploads/
 
 # Docker volumes
 pgdata/
+
+# Local scripts (may contain tokens)
+push_update.ps1
+push_to_github.ps1
