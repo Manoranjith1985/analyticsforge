@@ -79,7 +79,13 @@ def _seed_admin_user():
                 session.commit()
                 print(f"[startup] Admin user created: {ADMIN_EMAIL}")
             else:
-                print(f"[startup] Admin user already exists: {ADMIN_EMAIL}")
+                # Always force role to admin and ensure account is active
+                existing.role = "admin"
+                existing.is_active = True
+                existing.is_verified = True
+                existing.full_name = ADMIN_NAME
+                session.commit()
+                print(f"[startup] Admin user confirmed as admin: {ADMIN_EMAIL}")
     except Exception as e:
         print(f"[startup] Could not seed admin user: {e}")
 
