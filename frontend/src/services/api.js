@@ -128,6 +128,7 @@ export const embedAPI = {
 
 export const adminAPI = {
   listUsers: () => api.get('/admin/users'),
+  createUser: (data) => api.post('/admin/users', data),
   updateUser: (id, data) => api.patch(`/admin/users/${id}`, data),
   deleteUser: (id) => api.delete(`/admin/users/${id}`),
   getAuditLogs: (params) => api.get('/admin/audit-logs', { params }),
