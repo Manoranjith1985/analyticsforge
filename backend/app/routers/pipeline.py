@@ -7,6 +7,7 @@ from ..models.user import User
 from ..models.pipeline import DataPipeline, PipelineStep, StepType
 from ..models.datasource import DataSource
 from ..utils.security import get_current_user
+from ..utils.orm_helpers import orm_to_dict
 from ..services.data_connector import DataConnectorService
 import pandas as pd
 
@@ -38,7 +39,7 @@ class RunRequest(BaseModel):
 
 @router.get("/", response_model=List[PipelineResponse])
 def list_pipelines(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
-    return db.query(DataPipeline).filter(DataPipeline.owner_id == current_user.id).all()
+    return [orm_to_dict(p, ['id','name','description','is_active']) for p in db.query(DataPipeline).filter(DataPipeline.owner_id == current_user.id).all()]
 
 
 @router.post("/", response_model=PipelineResponse, status_code=201)
@@ -50,7 +51,7 @@ def create_pipeline(data: PipelineCreate, current_user: User = Depends(get_curre
         db.add(PipelineStep(pipeline_id=pipeline.id, **step.model_dump()))
     db.commit()
     db.refresh(pipeline)
-    return pipeline
+    return orm_to_dict(pipeline, ['id','name','description','is_active'])
 
 
 @router.get("/{pipeline_id}")
