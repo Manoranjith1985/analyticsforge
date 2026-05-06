@@ -83,6 +83,10 @@ export const aiAPI = {
     api.post('/ai/insights', { datasource_id, query, question }),
   anomalyDetect: (datasource_id, query) =>
     api.post('/ai/anomaly-detect', { datasource_id, query }),
+  generateDashboard: (requirements) =>
+    api.post('/ai/generate-dashboard', { requirements }),
+  refineDashboard: (current_config, feedback) =>
+    api.post('/ai/refine-dashboard', { current_config, feedback }),
 }
 
 export const analyticsAPI = {

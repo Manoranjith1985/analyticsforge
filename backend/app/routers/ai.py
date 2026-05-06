@@ -17,6 +17,15 @@ ai_service = AIService()
 
 # ── Schemas ──────────────────────────────────────────────────────────────────
 
+class DashboardGenRequest(BaseModel):
+    requirements: str
+
+
+class DashboardRefineRequest(BaseModel):
+    current_config: Dict
+    feedback: str
+
+
 class ChatMessage(BaseModel):
     role: str   # "user" | "assistant"
     content: str
@@ -139,3 +148,49 @@ async def detect_anomalies(
         data_summary, prompt_question, language=current_user.preferred_language
     )
     return {"anomalies": insights, "data": result}
+
+
+
+# ── AI Dashboard Generator ────────────────────────────────────────────────────
+
+@router.post("/generate-dashboard")
+async def generate_dashboard(
+    body: DashboardGenRequest,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """Generate a full dashboard config from natural language requirements."""
+    import traceback
+    try:
+        config = await ai_service.generate_dashboard(
+            body.requirements,
+            language=current_user.preferred_language
+        )
+        return {"config": config, "status": "generated"}
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Dashboard generation failed: {str(e)} | {traceback.format_exc()}"
+        )
+
+
+@router.post("/refine-dashboard")
+async def refine_dashboard(
+    body: DashboardRefineRequest,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """Refine an existing AI-generated dashboard config based on user feedback."""
+    import traceback
+    try:
+        config = await ai_service.refine_dashboard(
+            body.current_config,
+            body.feedback,
+            language=current_user.preferred_language
+        )
+        return {"config": config, "status": "refined"}
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Dashboard refinement failed: {str(e)} | {traceback.format_exc()}"
+        )
