@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import {
   RiSparklingLine, RiCloseLine, RiArrowRightLine, RiArrowLeftLine,
-  RiCheckDoubleLine, RiEdit2Line, RiSendPlaneFill, RiBarChartLine,
+  RiCheckDoubleLine, RiEdit2Line, RiBarChartLine,
   RiLineChartLine, RiPieChartLine, RiDashboardLine, RiTableLine,
-  RiNumbersLine, RiScatterPlot, RiFireLine, RiFilter3Line,
-  RiRocketLine, RiRefreshLine, RiLightbulbLine, RiAddLine
+  RiBarChart2Line, RiFireLine, RiFilterLine,
+  RiRocketLine, RiRefreshLine, RiLightbulbLine, RiAddLine,
+  RiHashtag, RiCheckLine
 } from 'react-icons/ri'
 import { aiAPI, dashboardAPI } from '../../services/api'
 import toast from 'react-hot-toast'
@@ -16,11 +17,11 @@ const CHART_META = {
   area:    { icon: RiLineChartLine,  color: 'bg-cyan-100 text-cyan-600',      label: 'Area Chart'   },
   pie:     { icon: RiPieChartLine,   color: 'bg-purple-100 text-purple-600',  label: 'Pie Chart'    },
   donut:   { icon: RiPieChartLine,   color: 'bg-pink-100 text-pink-600',      label: 'Donut Chart'  },
-  scatter: { icon: RiScatterPlot,    color: 'bg-orange-100 text-orange-600',  label: 'Scatter Plot' },
+  scatter: { icon: RiBarChart2Line,  color: 'bg-orange-100 text-orange-600',  label: 'Scatter Plot' },
   heatmap: { icon: RiFireLine,       color: 'bg-red-100 text-red-600',        label: 'Heatmap'      },
-  kpi:     { icon: RiNumbersLine,    color: 'bg-emerald-100 text-emerald-600',label: 'KPI Card'     },
+  kpi:     { icon: RiHashtag,        color: 'bg-emerald-100 text-emerald-600',label: 'KPI Card'     },
   table:   { icon: RiTableLine,      color: 'bg-gray-100 text-gray-600',      label: 'Data Table'   },
-  funnel:  { icon: RiFilter3Line,    color: 'bg-yellow-100 text-yellow-600',  label: 'Funnel Chart' },
+  funnel:  { icon: RiFilterLine,     color: 'bg-yellow-100 text-yellow-600',  label: 'Funnel Chart' },
 }
 
 const getChartMeta = (type) => CHART_META[type] || CHART_META.bar
