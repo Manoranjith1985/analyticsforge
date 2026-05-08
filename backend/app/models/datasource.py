@@ -17,6 +17,9 @@ class ConnectorType(str, enum.Enum):
     bigquery = "bigquery"
     s3 = "s3"
     mongodb = "mongodb"
+    jira = "jira"
+    servicenow = "servicenow"
+    servicedesk_plus = "servicedesk_plus"
 
 
 class SyncFrequency(str, enum.Enum):
