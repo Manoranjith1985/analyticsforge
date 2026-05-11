@@ -153,4 +153,54 @@ export const scheduledReportsAPI = {
   getExecutions: (id) => api.get(`/scheduled-reports/${id}/executions`),
 }
 
+// ── Infrastructure Management API ────────────────────────────────────────────
+export const infraAPI = {
+  // Assets
+  listAssets:   (params) => api.get('/infra/assets', { params }),
+  assetStats:   ()       => api.get('/infra/assets/stats'),
+  createAsset:  (data)   => api.post('/infra/assets', data),
+  updateAsset:  (id, data) => api.patch(`/infra/assets/${id}`, data),
+  deleteAsset:  (id)     => api.delete(`/infra/assets/${id}`),
+
+  // Probes
+  listProbes:      (params) => api.get('/infra/probes', { params }),
+  probeStats:      ()       => api.get('/infra/probes/stats'),
+  createProbe:     (data)   => api.post('/infra/probes', data),
+  updateProbe:     (id, data) => api.patch(`/infra/probes/${id}`, data),
+  deleteProbe:     (id)     => api.delete(`/infra/probes/${id}`),
+  sendProbeCommand:(id, data) => api.post(`/infra/probes/${id}/commands`, data),
+  getProbeCommands:(id)     => api.get(`/infra/probes/${id}/commands`),
+
+  // Patches
+  listPatches:  (params) => api.get('/infra/patches', { params }),
+  patchStats:   ()       => api.get('/infra/patches/stats'),
+  createPatch:  (data)   => api.post('/infra/patches', data),
+  deployPatch:  (id, data) => api.post(`/infra/patches/${id}/deploy`, data),
+
+  // Applications
+  listApplications:  (params) => api.get('/infra/applications', { params }),
+  createApplication: (data)   => api.post('/infra/applications', data),
+  updateApplication: (id, data) => api.patch(`/infra/applications/${id}`, data),
+  deleteApplication: (id)     => api.delete(`/infra/applications/${id}`),
+
+  // Servers
+  listServers:  (params) => api.get('/infra/servers', { params }),
+  serverStats:  ()       => api.get('/infra/servers/stats'),
+  createServer: (data)   => api.post('/infra/servers', data),
+  updateServer: (id, data) => api.patch(`/infra/servers/${id}`, data),
+  deleteServer: (id)     => api.delete(`/infra/servers/${id}`),
+  serverAction: (id, action) => api.post(`/infra/servers/${id}/action`, { action }),
+
+  // Automation Rules
+  listRules:    (params) => api.get('/infra/automation/rules', { params }),
+  createRule:   (data)   => api.post('/infra/automation/rules', data),
+  updateRule:   (id, data) => api.patch(`/infra/automation/rules/${id}`, data),
+  deleteRule:   (id)     => api.delete(`/infra/automation/rules/${id}`),
+  runRule:      (id)     => api.post(`/infra/automation/rules/${id}/run`),
+
+  // Automation Runs / Stats
+  listRuns:       (params) => api.get('/infra/automation/runs', { params }),
+  automationStats:()       => api.get('/infra/automation/stats'),
+}
+
 export default api

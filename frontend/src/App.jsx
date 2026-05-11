@@ -17,6 +17,11 @@ import AdminPage from './pages/AdminPage'
 import AutoMLPage from './pages/AutoMLPage'
 import EmbedPage from './pages/EmbedPage'
 import ScheduledReportsPage from './pages/ScheduledReportsPage'
+import AssetManagementPage from './pages/AssetManagementPage'
+import PatchManagementPage from './pages/PatchManagementPage'
+import ProbeManagementPage from './pages/ProbeManagementPage'
+import AppServerManagementPage from './pages/AppServerManagementPage'
+import InfraAutomationPage from './pages/InfraAutomationPage'
 
 function PrivateRoute({ children }) {
   const token = useAuthStore((s) => s.token)
@@ -57,6 +62,12 @@ export default function App() {
           <Route path="embed" element={<EmbedPage />} />
           <Route path="scheduled-reports" element={<ScheduledReportsPage />} />
           <Route path="admin" element={<AdminPage />} />
+          {/* Infrastructure Management */}
+          <Route path="infra/assets"     element={<AssetManagementPage />} />
+          <Route path="infra/patches"    element={<PatchManagementPage />} />
+          <Route path="infra/probes"     element={<ProbeManagementPage />} />
+          <Route path="infra/apps"       element={<AppServerManagementPage />} />
+          <Route path="infra/automation" element={<InfraAutomationPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -3,7 +3,8 @@ import {
   RiDashboardLine, RiDatabase2Line, RiFileChartLine, RiRobotLine,
   RiLineChartLine, RiSettings3Line, RiSlideshowLine,
   RiShieldLine, RiTimeLine, RiCodeLine, RiLogoutBoxLine,
-  RiGitMergeLine, RiCpuLine,
+  RiGitMergeLine, RiCpuLine, RiComputerLine, RiBugLine,
+  RiWifiLine, RiServerLine, RiTerminalLine,
 } from 'react-icons/ri'
 import clsx from 'clsx'
 import useAuthStore from '../../store/authStore'
@@ -40,6 +41,16 @@ const NAV_SECTIONS = [
     ],
   },
   {
+    label: 'Infrastructure',
+    items: [
+      { to: '/infra/assets',     icon: RiComputerLine, label: 'Asset Management' },
+      { to: '/infra/patches',    icon: RiBugLine,      label: 'Patch Management' },
+      { to: '/infra/probes',     icon: RiWifiLine,     label: 'Probe Management' },
+      { to: '/infra/apps',       icon: RiServerLine,   label: 'Apps & Servers' },
+      { to: '/infra/automation', icon: RiTerminalLine, label: 'Infra Automation' },
+    ],
+  },
+  {
     label: 'Admin',
     items: [
       { to: '/admin', icon: RiShieldLine, label: 'Admin Panel' },
@@ -62,8 +73,8 @@ export default function Sidebar() {
             <RiLineChartLine className="text-white text-lg" />
           </div>
           <div>
-            <span className="font-bold text-gray-900 text-sm block">AnalyticsForge</span>
-            <span className="text-xs text-gray-400">Business Intelligence</span>
+            <span className="font-bold text-gray-900 text-sm block">Connect Pro</span>
+            <span className="text-xs text-gray-400">IT Service Automation</span>
           </div>
         </div>
       </div>

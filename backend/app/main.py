@@ -8,7 +8,8 @@ from .config import settings
 from .database import Base, engine
 from .routers import (
     auth, datasources, dashboards, reports, ai, analytics,
-    collaboration, pipeline, stories, embed, admin, automl, scheduled_reports
+    collaboration, pipeline, stories, embed, admin, automl, scheduled_reports,
+    infra,
 )
 
 
@@ -139,6 +140,7 @@ app.include_router(embed.router)
 app.include_router(admin.router)
 app.include_router(automl.router)
 app.include_router(scheduled_reports.router)
+app.include_router(infra.router)
 
 # ── Health Check ──────────────────────────────────────────────────────────────
 @app.get("/api/health", tags=["Health"])
@@ -150,7 +152,8 @@ def health():
         "modules": [
             "auth", "datasources", "dashboards", "reports", "ai",
             "analytics", "collaboration", "pipeline", "stories",
-            "embed", "admin", "automl", "scheduled_reports"
+            "embed", "admin", "automl", "scheduled_reports",
+            "infra",
         ]
     }
 

@@ -8,3 +8,7 @@ from .story import DataStory, StorySlide
 from .embed import EmbedToken
 from .audit import AuditLog
 from .scheduled_report import ScheduledReport, ReportExecution
+from .infra import (
+    Asset, Probe, ProbeCommand, Patch, PatchDeployment,
+    Application, AppInstance, Server, AutomationRule, AutomationRun,
+)
