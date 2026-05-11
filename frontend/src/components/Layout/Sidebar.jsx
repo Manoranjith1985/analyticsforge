@@ -5,7 +5,9 @@ import {
   RiShieldLine, RiTimeLine, RiCodeLine, RiLogoutBoxLine,
   RiGitMergeLine, RiCpuLine, RiComputerLine, RiBugLine,
   RiWifiLine, RiServerLine, RiTerminalLine,
+  RiBrainLine, RiRobot2Line,
 } from 'react-icons/ri'
+import { MdOutlineMonitor } from 'react-icons/md'
 import clsx from 'clsx'
 import useAuthStore from '../../store/authStore'
 
@@ -48,6 +50,14 @@ const NAV_SECTIONS = [
       { to: '/infra/probes',     icon: RiWifiLine,     label: 'Probe Management' },
       { to: '/infra/apps',       icon: RiServerLine,   label: 'Apps & Servers' },
       { to: '/infra/automation', icon: RiTerminalLine, label: 'Infra Automation' },
+    ],
+  },
+  {
+    label: 'Connect Pro',
+    items: [
+      { to: '/vesa',               icon: RiServerLine,   label: 'VESA'               },
+      { to: '/virtual-supervisor', icon: RiBrainLine,    label: 'Virtual Supervisor'  },
+      { to: '/qbot',               icon: RiRobot2Line,   label: 'QBot'               },
     ],
   },
   {

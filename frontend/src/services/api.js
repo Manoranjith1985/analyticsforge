@@ -203,4 +203,44 @@ export const infraAPI = {
   automationStats:()       => api.get('/infra/automation/stats'),
 }
 
+// ── VESA (Virtual Environment Scheduling & Automation) ───────────────────────
+export const vesaAPI = {
+  listVMs:        (params) => api.get('/vesa/vms', { params }),
+  vmStats:        ()       => api.get('/vesa/vms/stats'),
+  createVM:       (data)   => api.post('/vesa/vms', data),
+  updateVM:       (id, data) => api.patch(`/vesa/vms/${id}`, data),
+  deleteVM:       (id)     => api.delete(`/vesa/vms/${id}`),
+  vmAction:       (id, action) => api.post(`/vesa/vms/${id}/action`, { action }),
+  listSchedules:  (params) => api.get('/vesa/schedules', { params }),
+  createSchedule: (data)   => api.post('/vesa/schedules', data),
+  deleteSchedule: (id)     => api.delete(`/vesa/schedules/${id}`),
+  toggleSchedule: (id)     => api.patch(`/vesa/schedules/${id}/toggle`),
+}
+
+// ── Virtual Supervisor ────────────────────────────────────────────────────────
+export const virtualSupervisorAPI = {
+  listRules:         (params) => api.get('/vsupervisor/rules', { params }),
+  ruleStats:         ()       => api.get('/vsupervisor/stats'),
+  createRule:        (data)   => api.post('/vsupervisor/rules', data),
+  updateRule:        (id, data) => api.patch(`/vsupervisor/rules/${id}`, data),
+  deleteRule:        (id)     => api.delete(`/vsupervisor/rules/${id}`),
+  toggleRule:        (id)     => api.patch(`/vsupervisor/rules/${id}/toggle`),
+  listAlerts:        (params) => api.get('/vsupervisor/alerts', { params }),
+  acknowledgeAlert:  (id)     => api.patch(`/vsupervisor/alerts/${id}/acknowledge`),
+  listRemediations:  (params) => api.get('/vsupervisor/remediations', { params }),
+}
+
+// ── QBot (AI Quality Assurance Bot) ──────────────────────────────────────────
+export const qbotAPI = {
+  listSuites:    (params)         => api.get('/qbot/suites', { params }),
+  suiteStats:    ()               => api.get('/qbot/stats'),
+  createSuite:   (data)           => api.post('/qbot/suites', data),
+  deleteSuite:   (id)             => api.delete(`/qbot/suites/${id}`),
+  listCases:     (suiteId)        => api.get(`/qbot/suites/${suiteId}/cases`),
+  createCase:    (suiteId, data)  => api.post(`/qbot/suites/${suiteId}/cases`, data),
+  runSuite:      (id)             => api.post(`/qbot/suites/${id}/run`),
+  listRuns:      (params)         => api.get('/qbot/runs', { params }),
+  getRunResults: (id)             => api.get(`/qbot/runs/${id}/results`),
+}
+
 export default api

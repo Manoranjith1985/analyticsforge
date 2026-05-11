@@ -22,6 +22,9 @@ import PatchManagementPage from './pages/PatchManagementPage'
 import ProbeManagementPage from './pages/ProbeManagementPage'
 import AppServerManagementPage from './pages/AppServerManagementPage'
 import InfraAutomationPage from './pages/InfraAutomationPage'
+import VESAPage from './pages/VESAPage'
+import VirtualSupervisorPage from './pages/VirtualSupervisorPage'
+import QBotPage from './pages/QBotPage'
 
 function PrivateRoute({ children }) {
   const token = useAuthStore((s) => s.token)
@@ -68,6 +71,10 @@ export default function App() {
           <Route path="infra/probes"     element={<ProbeManagementPage />} />
           <Route path="infra/apps"       element={<AppServerManagementPage />} />
           <Route path="infra/automation" element={<InfraAutomationPage />} />
+          {/* Connect Pro Modules */}
+          <Route path="vesa"               element={<VESAPage />} />
+          <Route path="virtual-supervisor" element={<VirtualSupervisorPage />} />
+          <Route path="qbot"               element={<QBotPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
