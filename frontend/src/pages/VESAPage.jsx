@@ -1,12 +1,29 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import {
   RiVirtualPrivateLine, RiAddLine, RiSearchLine, RiRefreshLine,
   RiPlayLine, RiStopLine, RiRestartLine, RiDeleteBinLine,
   RiCalendarLine, RiTimeLine, RiCloseLine, RiCheckLine,
-  RiCameraLine, RiServerLine, RiToggleLine,
+  RiCameraLine, RiServerLine, RiToggleLine, RiFileTextLine,
+  RiUploadLine, RiDownloadLine, RiFilePdfLine, RiFileWordLine,
+  RiFileExcelLine, RiFileUnknowLine, RiEyeLine,
 } from 'react-icons/ri'
 import { vesaAPI } from '../services/api'
 import toast from 'react-hot-toast'
+
+/* ── SOP mock data ───────────────────────────────────────────────────────── */
+const MOCK_DOCS = [
+  { id: 1, name: 'VESA VM Startup SOP.pdf',        vm: 'prod-web-01',  type: 'pdf',  size: '245 KB', uploaded: '2 days ago', uploader: 'Mano Ranjith' },
+  { id: 2, name: 'Backup Procedures.docx',          vm: 'backup-vm',    type: 'docx', size: '128 KB', uploaded: '1 week ago', uploader: 'Mano Ranjith' },
+  { id: 3, name: 'DR Runbook - All Environments.pdf', vm: 'All VMs',    type: 'pdf',  size: '512 KB', uploaded: '3 days ago', uploader: 'Mano Ranjith' },
+  { id: 4, name: 'Patch Schedule Q2-2026.xlsx',     vm: 'staging-app',  type: 'xlsx', size: '64 KB',  uploaded: '5 days ago', uploader: 'Mano Ranjith' },
+]
+
+function fileIcon(type) {
+  if (type === 'pdf')  return <RiFilePdfLine  className="text-red-500 text-xl" />
+  if (type === 'docx') return <RiFileWordLine  className="text-blue-500 text-xl" />
+  if (type === 'xlsx') return <RiFileExcelLine className="text-emerald-600 text-xl" />
+  return <RiFileUnknowLine className="text-gray-400 text-xl" />
+}
 
 /* ── helpers ─────────────────────────────────────────────────────────────── */
 const STATUS_META = {
@@ -166,10 +183,14 @@ export default function VESAPage() {
   const [tab, setTab]             = useState('vms')
   const [vms, setVMs]             = useState([])
   const [schedules, setSchedules] = useState([])
+  const [docs, setDocs]           = useState(MOCK_DOCS)
   const [search, setSearch]       = useState('')
   const [loading, setLoading]     = useState(true)
   const [showAddVM, setShowAddVM] = useState(false)
   const [showAddSched, setShowAddSched] = useState(false)
+  const [uploading, setUploading] = useState(false)
+  const [docVM, setDocVM]         = useState('All VMs')
+  const fileRef                   = useRef()
 
   const load = async () => {
     setLoading(true)
@@ -271,14 +292,42 @@ export default function VESAPage() {
           <button onClick={load} className="p-2 text-gray-500 hover:bg-gray-100 rounded-lg" title="Refresh">
             <RiRefreshLine className={loading ? 'animate-spin' : ''} />
           </button>
-          {tab === 'vms'
-            ? <button onClick={() => setShowAddVM(true)} className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm hover:bg-indigo-700">
-                <RiAddLine /> Register VM
-              </button>
-            : <button onClick={() => setShowAddSched(true)} className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm hover:bg-indigo-700">
-                <RiAddLine /> Add Schedule
-              </button>
-          }
+          {tab === 'vms' && (
+            <button onClick={() => setShowAddVM(true)} className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm hover:bg-indigo-700">
+              <RiAddLine /> Register VM
+            </button>
+          )}
+          {tab === 'schedules' && (
+            <button onClick={() => setShowAddSched(true)} className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm hover:bg-indigo-700">
+              <RiAddLine /> Add Schedule
+            </button>
+          )}
+          {tab === 'docs' && (
+            <button onClick={() => fileRef.current?.click()} disabled={uploading}
+              className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm hover:bg-indigo-700 disabled:opacity-50">
+              <RiUploadLine /> Upload SOP
+              <input ref={fileRef} type="file" className="hidden"
+                accept=".pdf,.doc,.docx,.xls,.xlsx,.txt"
+                onChange={async (e) => {
+                  const file = e.target.files?.[0]
+                  if (!file) return
+                  setUploading(true)
+                  try {
+                    const ext = file.name.split('.').pop().toLowerCase()
+                    const type = ext === 'pdf' ? 'pdf' : ext === 'docx' || ext === 'doc' ? 'docx' : ext === 'xlsx' || ext === 'xls' ? 'xlsx' : 'other'
+                    const newDoc = {
+                      id: Date.now(), name: file.name, vm: docVM,
+                      type, size: `${Math.round(file.size / 1024)} KB`,
+                      uploaded: 'Just now', uploader: 'Mano Ranjith',
+                    }
+                    setDocs(prev => [newDoc, ...prev])
+                    toast.success(`"${file.name}" uploaded successfully`)
+                  } catch { toast.error('Upload failed') }
+                  finally { setUploading(false); e.target.value = '' }
+                }}
+              />
+            </button>
+          )}
         </div>
       </div>
 
@@ -292,12 +341,16 @@ export default function VESAPage() {
 
       {/* Tabs */}
       <div className="flex gap-1 bg-gray-100 rounded-lg p-1 w-fit">
-        {['vms', 'schedules'].map(t => (
-          <button key={t} onClick={() => setTab(t)}
-            className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${tab === t ? 'bg-white text-indigo-700 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}>
-            {t === 'vms' ? 'Virtual Machines' : 'Schedules'}
-          </button>
-        ))}
+        {[
+            { key: 'vms', label: 'Virtual Machines' },
+            { key: 'schedules', label: 'Schedules' },
+            { key: 'docs', label: `SOP Documents (${docs.length})` },
+          ].map(({ key, label }) => (
+            <button key={key} onClick={() => setTab(key)}
+              className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${tab === key ? 'bg-white text-indigo-700 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}>
+              {label}
+            </button>
+          ))}
       </div>
 
       {/* VMs Tab */}
@@ -421,6 +474,75 @@ export default function VESAPage() {
               </table>
             </div>
           )}
+        </div>
+      )}
+
+      {/* Documents / SOP Tab */}
+      {tab === 'docs' && (
+        <div className="space-y-4">
+          <div className="flex items-center gap-3 bg-indigo-50 border border-indigo-200 rounded-xl px-4 py-3">
+            <RiFileTextLine className="text-indigo-500 text-lg flex-shrink-0" />
+            <div className="flex-1">
+              <p className="text-sm text-indigo-800 font-medium">Link SOP to VM</p>
+              <p className="text-xs text-indigo-500">Select a VM before uploading to associate the document</p>
+            </div>
+            <select value={docVM} onChange={e => setDocVM(e.target.value)}
+              className="border border-indigo-200 rounded-lg px-3 py-1.5 text-sm text-indigo-700 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-400">
+              <option>All VMs</option>
+              {vms.map(v => <option key={v.id}>{v.name}</option>)}
+            </select>
+          </div>
+
+          <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+            {docs.length === 0 ? (
+              <div className="py-20 flex flex-col items-center gap-3 text-gray-400">
+                <RiFileTextLine className="text-5xl" />
+                <p className="text-sm">No SOPs uploaded yet</p>
+                <button onClick={() => fileRef.current?.click()}
+                  className="px-4 py-2 text-sm bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 flex items-center gap-2">
+                  <RiUploadLine /> Upload first SOP
+                </button>
+              </div>
+            ) : (
+              <table className="w-full text-sm">
+                <thead className="bg-gray-50 text-xs text-gray-500 uppercase tracking-wider">
+                  <tr>
+                    {['Document', 'Linked VM', 'Size', 'Uploaded', 'Uploader', 'Actions'].map(h => (
+                      <th key={h} className="px-5 py-3 text-left font-semibold">{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100">
+                  {docs.map(doc => (
+                    <tr key={doc.id} className="hover:bg-gray-50 transition-colors">
+                      <td className="px-5 py-3">
+                        <div className="flex items-center gap-2">
+                          {fileIcon(doc.type)}
+                          <span className="font-medium text-gray-900 text-sm">{doc.name}</span>
+                        </div>
+                      </td>
+                      <td className="px-5 py-3">
+                        <span className="px-2 py-0.5 text-xs font-medium bg-indigo-50 text-indigo-600 rounded-full">{doc.vm}</span>
+                      </td>
+                      <td className="px-5 py-3 text-gray-500">{doc.size}</td>
+                      <td className="px-5 py-3 text-gray-500">{doc.uploaded}</td>
+                      <td className="px-5 py-3 text-gray-600">{doc.uploader}</td>
+                      <td className="px-5 py-3">
+                        <div className="flex items-center gap-1">
+                          <button className="p-1.5 text-indigo-500 hover:bg-indigo-50 rounded-lg" title="View"><RiEyeLine /></button>
+                          <button className="p-1.5 text-emerald-600 hover:bg-emerald-50 rounded-lg" title="Download"><RiDownloadLine /></button>
+                          <button onClick={() => setDocs(prev => prev.filter(d => d.id !== doc.id))}
+                            className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg" title="Delete">
+                            <RiDeleteBinLine />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </div>
         </div>
       )}
 

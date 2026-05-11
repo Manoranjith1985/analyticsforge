@@ -5,9 +5,8 @@ import {
   RiShieldLine, RiTimeLine, RiCodeLine, RiLogoutBoxLine,
   RiGitMergeLine, RiCpuLine, RiComputerLine, RiBugLine,
   RiWifiLine, RiServerLine, RiTerminalLine,
-  RiBrainLine, RiRobot2Line,
+  RiBrainLine, RiRobot2Line, RiMicLine, RiGroupLine,
 } from 'react-icons/ri'
-import { MdOutlineMonitor } from 'react-icons/md'
 import clsx from 'clsx'
 import useAuthStore from '../../store/authStore'
 
@@ -58,6 +57,8 @@ const NAV_SECTIONS = [
       { to: '/vesa',               icon: RiServerLine,   label: 'VESA'               },
       { to: '/virtual-supervisor', icon: RiBrainLine,    label: 'Virtual Supervisor'  },
       { to: '/qbot',               icon: RiRobot2Line,   label: 'QBot'               },
+      { to: '/voice-bot',          icon: RiMicLine,      label: 'Voice Bot'           },
+      { to: '/bot-hub',            icon: RiGroupLine,    label: 'Bot Hub'             },
     ],
   },
   {

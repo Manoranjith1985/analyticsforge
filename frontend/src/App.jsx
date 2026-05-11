@@ -25,6 +25,8 @@ import InfraAutomationPage from './pages/InfraAutomationPage'
 import VESAPage from './pages/VESAPage'
 import VirtualSupervisorPage from './pages/VirtualSupervisorPage'
 import QBotPage from './pages/QBotPage'
+import VoiceBotPage from './pages/VoiceBotPage'
+import BotHubPage from './pages/BotHubPage'
 
 function PrivateRoute({ children }) {
   const token = useAuthStore((s) => s.token)
@@ -75,6 +77,8 @@ export default function App() {
           <Route path="vesa"               element={<VESAPage />} />
           <Route path="virtual-supervisor" element={<VirtualSupervisorPage />} />
           <Route path="qbot"               element={<QBotPage />} />
+          <Route path="voice-bot"          element={<VoiceBotPage />} />
+          <Route path="bot-hub"            element={<BotHubPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
