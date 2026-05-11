@@ -5,12 +5,18 @@ import {
   RiShieldLine, RiTimeLine, RiCodeLine, RiLogoutBoxLine,
   RiGitMergeLine, RiCpuLine, RiComputerLine, RiBugLine,
   RiWifiLine, RiServerLine, RiTerminalLine,
-  RiBrainLine, RiRobot2Line, RiMicLine, RiGroupLine,
+  RiBrainLine, RiRobot2Line, RiMicLine, RiGroupLine, RiGridLine,
 } from 'react-icons/ri'
 import clsx from 'clsx'
 import useAuthStore from '../../store/authStore'
 
 const NAV_SECTIONS = [
+  {
+    label: '⚡ Control Hub',
+    items: [
+      { to: '/control-hub', icon: RiGridLine, label: 'Control Hub — All Tools' },
+    ],
+  },
   {
     label: 'Core',
     items: [

@@ -27,6 +27,7 @@ import VirtualSupervisorPage from './pages/VirtualSupervisorPage'
 import QBotPage from './pages/QBotPage'
 import VoiceBotPage from './pages/VoiceBotPage'
 import BotHubPage from './pages/BotHubPage'
+import ControlHubPage from './pages/ControlHubPage'
 
 function PrivateRoute({ children }) {
   const token = useAuthStore((s) => s.token)
@@ -54,7 +55,8 @@ export default function App() {
             </PrivateRoute>
           }
         >
-          <Route index element={<Navigate to="/dashboards" replace />} />
+          <Route index element={<Navigate to="/control-hub" replace />} />
+          <Route path="control-hub" element={<ControlHubPage />} />
           <Route path="dashboards" element={<DashboardsPage />} />
           <Route path="dashboards/:id" element={<DashboardBuilderPage />} />
           <Route path="datasources" element={<DataSourcesPage />} />
@@ -79,6 +81,7 @@ export default function App() {
           <Route path="qbot"               element={<QBotPage />} />
           <Route path="voice-bot"          element={<VoiceBotPage />} />
           <Route path="bot-hub"            element={<BotHubPage />} />
+          <Route path="control-hub"        element={<ControlHubPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
