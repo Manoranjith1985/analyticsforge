@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 import {
-  RiShieldCheckLine, RiAddLine, RiRefreshLine, RiSearchLine,
-  RiAlertLine, RiCheckboxCircleLine, RiTimeLine, RiCloseLine,
-  RiArrowRightLine, RiCalendarLine, RiComputerLine, RiErrorWarningLine,
+  RiShieldLine, RiAddLine, RiRefreshLine, RiSearchLine,
+  RiBugLine, RiCheckLine, RiTimeLine, RiCloseLine,
+  RiArrowRightLine, RiComputerLine,
 } from 'react-icons/ri'
 import { infraAPI } from '../services/api'
 import toast from 'react-hot-toast'
@@ -16,10 +16,10 @@ const SEVERITY = {
 
 const DEP_STATUS = {
   pending:    { color: 'bg-gray-100 text-gray-600',    icon: RiTimeLine },
-  scheduled:  { color: 'bg-blue-100 text-blue-700',    icon: RiCalendarLine },
+  scheduled:  { color: 'bg-blue-100 text-blue-700',    icon: RiTimeLine },
   installing: { color: 'bg-amber-100 text-amber-700',  icon: RiRefreshLine },
-  installed:  { color: 'bg-emerald-100 text-emerald-700', icon: RiCheckboxCircleLine },
-  failed:     { color: 'bg-red-100 text-red-700',      icon: RiAlertLine },
+  installed:  { color: 'bg-emerald-100 text-emerald-700', icon: RiCheckLine },
+  failed:     { color: 'bg-red-100 text-red-700',      icon: RiBugLine },
   ignored:    { color: 'bg-gray-100 text-gray-400',    icon: RiCloseLine },
 }
 
@@ -206,7 +206,7 @@ export default function PatchManagementPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-            <RiShieldCheckLine className="text-indigo-600" /> Patch Management
+            <RiShieldLine className="text-indigo-600" /> Patch Management
           </h1>
           <p className="text-sm text-gray-500 mt-1">Track and deploy patches across all managed endpoints</p>
         </div>
@@ -263,7 +263,7 @@ export default function PatchManagementPage() {
               </td></tr>
             ) : filtered.length === 0 ? (
               <tr><td colSpan={6} className="text-center py-12 text-gray-400">
-                <RiShieldCheckLine className="text-4xl mx-auto mb-2 text-gray-300" />No patches found
+                <RiShieldLine className="text-4xl mx-auto mb-2 text-gray-300" />No patches found
               </td></tr>
             ) : filtered.map(patch => {
               const sev = SEVERITY[patch.severity] || SEVERITY.medium

@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react'
 import {
-  RiAppsLine, RiServerLine, RiAddLine, RiRefreshLine, RiSearchLine,
-  RiPlayLine, RiStopLine, RiRestartLine, RiDeleteBinLine, RiEdit2Line,
-  RiCloseLine, RiCpuLine, RiHardDriveLine, RiSpeedLine, RiTimeLine,
-  RiCheckboxCircleLine, RiAlertLine, RiErrorWarningLine,
+  RiServerLine, RiAddLine, RiRefreshLine, RiSearchLine,
+  RiPlayLine, RiDeleteBinLine, RiEdit2Line,
+  RiCloseLine, RiCpuLine, RiBarChartLine, RiTimeLine,
+  RiCheckLine, RiBugLine,
 } from 'react-icons/ri'
 import { infraAPI } from '../services/api'
 import toast from 'react-hot-toast'
@@ -148,7 +148,7 @@ function ApplicationsTab() {
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-2">
                     <div className="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <RiAppsLine className="text-indigo-600" />
+                      <RiServerLine className="text-indigo-600" />
                     </div>
                     <div>
                       <p className="font-medium text-gray-900">{app.name}</p>
@@ -169,7 +169,7 @@ function ApplicationsTab() {
                   <div className="flex gap-1">
                     <button onClick={() => handleStatusToggle(app)} title="Toggle Status"
                       className={`p-1.5 rounded-lg text-gray-400 ${app.status === 'active' ? 'hover:text-amber-600 hover:bg-amber-50' : 'hover:text-emerald-600 hover:bg-emerald-50'}`}>
-                      {app.status === 'active' ? <RiStopLine /> : <RiPlayLine />}
+                      {app.status === 'active' ? <RiCloseLine /> : <RiPlayLine />}
                     </button>
                     <button onClick={() => handleDelete(app.id)}
                       className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg"><RiDeleteBinLine /></button>
@@ -339,7 +339,7 @@ function ServersTab() {
                   {srv.ram_pct != null && (
                     <div>
                       <div className="flex items-center justify-between mb-1">
-                        <span className="text-xs text-gray-400 flex items-center gap-1"><RiSpeedLine />RAM</span>
+                        <span className="text-xs text-gray-400 flex items-center gap-1"><RiBarChartLine />RAM</span>
                       </div>
                       <ProgressBar value={srv.ram_pct} />
                     </div>
@@ -347,7 +347,7 @@ function ServersTab() {
                   {srv.disk_pct != null && (
                     <div>
                       <div className="flex items-center justify-between mb-1">
-                        <span className="text-xs text-gray-400 flex items-center gap-1"><RiHardDriveLine />Disk</span>
+                        <span className="text-xs text-gray-400 flex items-center gap-1"><RiServerLine />Disk</span>
                       </div>
                       <ProgressBar value={srv.disk_pct} />
                     </div>
@@ -366,10 +366,10 @@ function ServersTab() {
                     )}
                     {srv.status === 'running' && (
                       <button onClick={() => handleAction(srv, 'stop')}
-                        className="p-1.5 text-gray-400 hover:text-amber-600 hover:bg-amber-50 rounded-lg"><RiStopLine /></button>
+                        className="p-1.5 text-gray-400 hover:text-amber-600 hover:bg-amber-50 rounded-lg"><RiCloseLine /></button>
                     )}
                     <button onClick={() => handleAction(srv, 'reboot')}
-                      className="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg"><RiRestartLine /></button>
+                      className="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg"><RiRefreshLine /></button>
                     <button onClick={() => handleDelete(srv.id)}
                       className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg"><RiDeleteBinLine /></button>
                   </div>
@@ -397,14 +397,14 @@ export default function AppServerManagementPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-          <RiAppsLine className="text-indigo-600" /> App & Server Management
+          <RiServerLine className="text-indigo-600" /> App & Server Management
         </h1>
         <p className="text-sm text-gray-500 mt-1">Monitor applications and server infrastructure across your environment</p>
       </div>
 
       {/* Tabs */}
       <div className="flex gap-1 bg-gray-100 rounded-xl p-1 w-fit">
-        {[['applications','Applications',RiAppsLine],['servers','Servers',RiServerLine]].map(([key,label,Icon]) => (
+        {[['applications','Applications',RiServerLine],['servers','Servers',RiServerLine]].map(([key,label,Icon]) => (
           <button key={key} onClick={() => setTab(key)}
             className={`flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-medium transition-colors ${
               tab === key ? 'bg-white text-indigo-700 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}>
@@ -417,3 +417,4 @@ export default function AppServerManagementPage() {
     </div>
   )
 }
+                                                                                    

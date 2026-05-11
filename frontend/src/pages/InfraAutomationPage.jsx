@@ -1,26 +1,25 @@
 import { useState, useEffect } from 'react'
 import {
-  RiRobotLine, RiAddLine, RiRefreshLine, RiPlayLine, RiPauseLine,
-  RiDeleteBinLine, RiEdit2Line, RiCloseLine, RiCheckboxCircleLine,
-  RiAlertLine, RiTimeLine, RiFlashlightLine, RiCalendarLine,
-  RiShieldLine, RiListCheck, RiHistoryLine, RiToggleLine,
+  RiRobotLine, RiAddLine, RiRefreshLine, RiPlayLine, RiTimeLine,
+  RiDeleteBinLine, RiEdit2Line, RiCloseLine, RiCheckLine,
+  RiBugLine, RiShieldLine, RiSettings3Line,
   RiSparklingLine, RiArrowRightLine,
 } from 'react-icons/ri'
 import { infraAPI } from '../services/api'
 import toast from 'react-hot-toast'
 
 const TRIGGER_META = {
-  manual:    { color: 'bg-gray-100 text-gray-600',      icon: RiFlashlightLine, label: 'Manual' },
-  scheduled: { color: 'bg-blue-100 text-blue-700',      icon: RiCalendarLine,   label: 'Scheduled' },
+  manual:    { color: 'bg-gray-100 text-gray-600',      icon: RiPlayLine, label: 'Manual' },
+  scheduled: { color: 'bg-blue-100 text-blue-700',      icon: RiTimeLine,   label: 'Scheduled' },
   event:     { color: 'bg-purple-100 text-purple-700',  icon: RiShieldLine,     label: 'Event' },
-  threshold: { color: 'bg-amber-100 text-amber-700',    icon: RiAlertLine,      label: 'Threshold' },
+  threshold: { color: 'bg-amber-100 text-amber-700',    icon: RiBugLine,      label: 'Threshold' },
 }
 
 const RUN_STATUS = {
-  running: { color: 'bg-blue-100 text-blue-700',    dot: 'bg-blue-400 animate-pulse', icon: RiFlashlightLine },
-  success: { color: 'bg-emerald-100 text-emerald-700', dot: 'bg-emerald-400', icon: RiCheckboxCircleLine },
-  failed:  { color: 'bg-red-100 text-red-600',      dot: 'bg-red-400',     icon: RiAlertLine },
-  partial: { color: 'bg-amber-100 text-amber-700',  dot: 'bg-amber-400',   icon: RiAlertLine },
+  running: { color: 'bg-blue-100 text-blue-700',    dot: 'bg-blue-400 animate-pulse', icon: RiPlayLine },
+  success: { color: 'bg-emerald-100 text-emerald-700', dot: 'bg-emerald-400', icon: RiCheckLine },
+  failed:  { color: 'bg-red-100 text-red-600',      dot: 'bg-red-400',     icon: RiBugLine },
+  partial: { color: 'bg-amber-100 text-amber-700',  dot: 'bg-amber-400',   icon: RiBugLine },
 }
 
 function StatCard({ label, value, color = 'indigo', sub }) {
@@ -162,7 +161,7 @@ function RuleModal({ rule, onClose, onSave }) {
           <button onClick={onClose} className="px-4 py-2 text-sm border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-50">Cancel</button>
           <button onClick={save} disabled={saving}
             className="flex items-center gap-2 px-4 py-2 text-sm bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium disabled:opacity-50">
-            <RiFlashlightLine />{saving ? 'Saving…' : rule ? 'Update Rule' : 'Create Rule'}
+            <RiPlayLine />{saving ? 'Saving…' : rule ? 'Update Rule' : 'Create Rule'}
           </button>
         </div>
       </div>
@@ -255,7 +254,7 @@ export default function InfraAutomationPage() {
 
       {/* Tabs */}
       <div className="flex gap-1 bg-gray-100 rounded-xl p-1 w-fit">
-        {[['rules','Automation Rules',RiListCheck],['history','Execution History',RiHistoryLine]].map(([k,l,Icon]) => (
+        {[['rules','Automation Rules',RiCheckLine],['history','Execution History',RiTimeLine]].map(([k,l,Icon]) => (
           <button key={k} onClick={() => setTab(k)}
             className={`flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-medium transition-colors ${
               tab === k ? 'bg-white text-indigo-700 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}>
@@ -303,7 +302,7 @@ export default function InfraAutomationPage() {
                     <div className="flex gap-1 flex-shrink-0">
                       <button onClick={() => handleToggle(rule)} title={rule.is_active ? 'Pause' : 'Activate'}
                         className={`p-1.5 rounded-lg text-gray-400 ${rule.is_active ? 'hover:text-amber-600 hover:bg-amber-50' : 'hover:text-emerald-600 hover:bg-emerald-50'}`}>
-                        {rule.is_active ? <RiPauseLine /> : <RiPlayLine />}
+                        {rule.is_active ? <RiTimeLine /> : <RiPlayLine />}
                       </button>
                       <button onClick={() => setModal({ mode: 'edit', rule })}
                         className="p-1.5 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg"><RiEdit2Line /></button>
@@ -402,3 +401,4 @@ export default function InfraAutomationPage() {
     </div>
   )
 }
+                                                                                     

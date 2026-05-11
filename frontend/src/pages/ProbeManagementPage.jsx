@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react'
 import {
-  RiRadarLine, RiAddLine, RiRefreshLine, RiSearchLine,
-  RiTerminalLine, RiRestartLine, RiDeleteBinLine, RiCloseLine,
-  RiCheckboxCircleLine, RiAlertLine, RiTimeLine, RiPulseLine,
-  RiFlashlightLine, RiDownloadLine,
+  RiGlobalLine, RiAddLine, RiRefreshLine, RiSearchLine,
+  RiTerminalLine, RiDeleteBinLine, RiCloseLine,
+  RiCheckLine, RiBugLine, RiTimeLine, RiLineChartLine,
+  RiPlayLine, RiDownloadLine,
 } from 'react-icons/ri'
 import { infraAPI } from '../services/api'
 import toast from 'react-hot-toast'
@@ -92,7 +92,7 @@ function CommandModal({ probe, onClose }) {
           </div>
           <button onClick={send} disabled={sending}
             className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium disabled:opacity-50">
-            <RiFlashlightLine />{sending ? 'Sending…' : 'Send Command'}
+            <RiPlayLine />{sending ? 'Sending…' : 'Send Command'}
           </button>
 
           {/* History */}
@@ -220,7 +220,7 @@ export default function ProbeManagementPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-            <RiRadarLine className="text-indigo-600" /> Probe Management
+            <RiGlobalLine className="text-indigo-600" /> Probe Management
           </h1>
           <p className="text-sm text-gray-500 mt-1">Deploy and monitor lightweight agents across all managed endpoints</p>
         </div>
@@ -265,7 +265,7 @@ export default function ProbeManagementPage() {
         </div>
       ) : filtered.length === 0 ? (
         <div className="text-center py-16">
-          <RiRadarLine className="text-5xl text-gray-300 mx-auto mb-3" />
+          <RiGlobalLine className="text-5xl text-gray-300 mx-auto mb-3" />
           <p className="text-gray-500 font-medium">No probes deployed yet</p>
           <p className="text-gray-400 text-sm mt-1">Deploy a probe to start monitoring endpoints</p>
         </div>
@@ -284,7 +284,7 @@ export default function ProbeManagementPage() {
                     <button onClick={() => setCommandTarget(probe)} title="Send Command"
                       className="p-1.5 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg"><RiTerminalLine /></button>
                     <button onClick={() => handleStatusChange(probe, probe.status === 'active' ? 'inactive' : 'active')} title="Toggle Status"
-                      className="p-1.5 text-gray-400 hover:text-amber-600 hover:bg-amber-50 rounded-lg"><RiRestartLine /></button>
+                      className="p-1.5 text-gray-400 hover:text-amber-600 hover:bg-amber-50 rounded-lg"><RiRefreshLine /></button>
                     <button onClick={() => handleDelete(probe.id)} title="Remove Probe"
                       className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg"><RiDeleteBinLine /></button>
                   </div>
@@ -293,7 +293,7 @@ export default function ProbeManagementPage() {
                 {/* Info */}
                 <div className="space-y-1.5 mb-3">
                   <div className="flex items-center gap-2 text-sm">
-                    <RiPulseLine className="text-gray-400 flex-shrink-0" />
+                    <RiLineChartLine className="text-gray-400 flex-shrink-0" />
                     <span className="font-mono text-xs text-gray-500 truncate">{probe.probe_key}</span>
                   </div>
                   {probe.ip_address && (
@@ -335,3 +335,4 @@ export default function ProbeManagementPage() {
     </div>
   )
 }
+                           

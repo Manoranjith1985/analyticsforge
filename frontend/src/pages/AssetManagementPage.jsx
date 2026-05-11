@@ -1,26 +1,26 @@
 import { useState, useEffect } from 'react'
 import {
   RiComputerLine, RiAddLine, RiSearchLine, RiRefreshLine,
-  RiDeleteBinLine, RiEdit2Line, RiWifiLine, RiSignalWifiOffLine,
-  RiQuestionLine, RiDownload2Line, RiFilterLine, RiServerLine,
-  RiLaptopLine, RiRouterLine, RiCloseLine, RiSave3Line,
+  RiDeleteBinLine, RiEdit2Line, RiWifiLine, RiShieldLine,
+  RiGlobalLine, RiDownloadLine, RiServerLine,
+  RiCloseLine, RiCheckLine,
 } from 'react-icons/ri'
 import { infraAPI } from '../services/api'
 import toast from 'react-hot-toast'
 
 const STATUS_META = {
   online:      { color: 'bg-emerald-100 text-emerald-700', dot: 'bg-emerald-400', icon: RiWifiLine },
-  offline:     { color: 'bg-red-100 text-red-600',         dot: 'bg-red-400',     icon: RiSignalWifiOffLine },
-  unknown:     { color: 'bg-gray-100 text-gray-500',       dot: 'bg-gray-400',    icon: RiQuestionLine },
+  offline:     { color: 'bg-red-100 text-red-600',         dot: 'bg-red-400',     icon: RiShieldLine },
+  unknown:     { color: 'bg-gray-100 text-gray-500',       dot: 'bg-gray-400',    icon: RiShieldLine },
   maintenance: { color: 'bg-amber-100 text-amber-700',     dot: 'bg-amber-400',   icon: RiComputerLine },
 }
 
 const TYPE_ICON = {
   workstation: RiComputerLine,
-  laptop:      RiLaptopLine,
+  laptop:      RiComputerLine,
   server:      RiServerLine,
   vm:          RiServerLine,
-  network:     RiRouterLine,
+  network:     RiGlobalLine,
 }
 
 function StatCard({ label, value, color = 'indigo' }) {
@@ -99,7 +99,7 @@ function AssetModal({ asset, onClose, onSave }) {
           <button onClick={onClose} className="px-4 py-2 text-sm border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-50">Cancel</button>
           <button onClick={handleSave} disabled={saving}
             className="flex items-center gap-2 px-4 py-2 text-sm bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium disabled:opacity-50">
-            <RiSave3Line />{saving ? 'Saving…' : 'Save Asset'}
+            <RiCheckLine />{saving ? 'Saving…' : 'Save Asset'}
           </button>
         </div>
       </div>
